@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.activity)
     testImplementation(libs.junit)
     // 为了方便我们使用……算了我也忘了叫什么了，反正原来是implementation("com.google.code.gson:gson:2.8.9")一类的
     implementation(libs.gson)

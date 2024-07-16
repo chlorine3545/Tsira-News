@@ -62,7 +62,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
             holder.thumbnail_pic_s.setImageResource(R.drawable.default_holder);
         }
 
-        Animation animation = android.view.animation.AnimationUtils.loadAnimation(mContext, R.anim.item_animation_fall_down);
+        Animation animation = android.view.animation.AnimationUtils.loadAnimation(mContext, R.anim.item_animation_float_up);
         holder.itemView.startAnimation(animation);
     }
 
