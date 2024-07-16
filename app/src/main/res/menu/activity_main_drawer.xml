@@ -9,15 +9,20 @@
             android:icon="@drawable/baseline_home_24"
             android:title="首页" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_history"
             android:icon="@drawable/baseline_access_time_filled_24"
             android:title="历史记录" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/baseline_account_circle_24"
             android:title="账号信息" />
+        <!-- 扎个眼，这块 Android studio 搜不到图标 -->
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/baseline_info_24"
+            android:title="退出登录" />
+        <item
+            android:id="@+id/nav_about"
             android:icon="@drawable/baseline_info_24"
             android:title="关于APP" />
     </group>

@@ -1,0 +1,18 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#D3D3D3"/> <!-- 按下状态的背景颜色 -->
+            <corners android:radius="24dp"/>
+            <stroke android:width="2dp" android:color="#B6B6B6"/> <!-- 边框颜色和宽度 -->
+        </shape>
+    </item>
+    <!-- Normal state -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#E0E0E0"/> <!-- 正常状态的背景颜色 -->
+            <corners android:radius="24dp"/>
+            <stroke android:width="2dp" android:color="#BBBBBB"/> <!-- 边框颜色和宽度 -->
+        </shape>
+    </item>
+</selector>

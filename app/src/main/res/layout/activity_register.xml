@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".RegisterActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/comeback"
+        android:id="@+id/backToLogin"
+        android:layout_marginTop="10dp"
+        >
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_shape"
+        android:clipToOutline="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher_round"
+        tools:targetApi="31" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:text="@string/register_title"
+        android:textColor="#333"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/login_et_bg">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/nickname">
+
+            </ImageView>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:autofillHints=""
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_nickname"
+                android:inputType="text"
+                android:textColorHint="@color/grey"
+                android:textSize="15sp"
+                android:id="@+id/registerEtrNickname">
+
+            </EditText>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/login_et_bg">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/email">
+
+            </ImageView>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:autofillHints=""
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_email"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/grey"
+                android:textSize="15sp"
+                android:id="@+id/registerEtrEmail">
+
+            </EditText>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/login_et_bg">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/password">
+
+            </ImageView>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:autofillHints=""
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_password"
+                android:inputType="textPassword"
+                android:textColorHint="@color/grey"
+                android:textSize="15sp"
+                android:id="@+id/registerEtrPassword"
+                >
+
+            </EditText>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:background="@drawable/login_btn_bg"
+            android:text="@string/lets_register"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:id="@+id/registerBtn">
+
+        </Button>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>
