@@ -6,6 +6,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,6 +61,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
             // 使用默认占位图片
             holder.thumbnail_pic_s.setImageResource(R.drawable.default_holder);
         }
+
+        Animation animation = android.view.animation.AnimationUtils.loadAnimation(mContext, R.anim.item_animation_fall_down);
+        holder.itemView.startAnimation(animation);
     }
 
     @Override
