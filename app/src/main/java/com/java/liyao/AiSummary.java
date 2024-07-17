@@ -1,7 +1,6 @@
 package com.java.liyao;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,17 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AiSummary {
-    private static final String apiKey = "700e022f1d2f8f8d4c29b675e09d6a82.NZX85Lct83ikjRL2";
-    private static final String basicPrompt = "Please summarize the main content of the following news in concise and accurate English. Ignore any irrelevant words and provide the summary directly without any additional information.\n";
-    private static final ClientV4 client = new ClientV4.Builder(apiKey).build();
+    private static final String API_KEY = "700e022f1d2f8f8d4c29b675e09d6a82.NZX85Lct83ikjRL2";
+    private static final String BASIC_PROMPT = "Please summarize the main content of the following news in concise and accurate English. Ignore any irrelevant words and provide the summary directly without any additional information.\n";
+    private static final ClientV4 CLIENT = new ClientV4.Builder(API_KEY).build();
     private static final String requestIdTemplate = "thu-%d";
 
     public static String aiSummaryInvoke(String content) {
         List<ChatMessage> messages = new ArrayList<>();
-        final String finalPrompt = basicPrompt + content;
+        final String finalPrompt = BASIC_PROMPT + content;
         ChatMessage chatMessage = new ChatMessage(ChatMessageRole.USER.value(), finalPrompt);
         messages.add(chatMessage);
         @SuppressLint("DefaultLocale") String requestId = String.format(requestIdTemplate, System.currentTimeMillis());
+
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model(Constants.ModelChatGLM4)
                 .stream(Boolean.FALSE)
@@ -34,8 +34,11 @@ public class AiSummary {
                 .messages(messages)
                 .requestId(requestId)
                 .build();
+
+        ModelApiResponse invokeModelApiResp = CLIENT.invokeModelApi(chatCompletionRequest); // 修正后的代码
+
         String ret = "";
-        ModelApiResponse invokeModelApiResp = client.invokeModelApi(chatCompletionRequest);
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             ret = mapper.writeValueAsString(invokeModelApiResp);

@@ -16,13 +16,23 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.java.liyao.db.HistoryDbHelper;
 import com.java.liyao.db.LikeDbHelper;
 import com.java.liyao.entity.UserInfo;
+import com.zhipu.oapi.ClientV4;
+import com.zhipu.oapi.Constants;
+import com.zhipu.oapi.service.v4.model.ChatCompletionRequest;
+import com.zhipu.oapi.service.v4.model.ChatMessage;
+import com.zhipu.oapi.service.v4.model.ChatMessageRole;
+import com.zhipu.oapi.service.v4.model.ModelApiResponse;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class NewsDetailsActivity extends AppCompatActivity {
@@ -88,6 +98,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
         // 图片的逻辑也比较复杂，暂时不写
 
         details_content.setText(dataDTO.getContent());
