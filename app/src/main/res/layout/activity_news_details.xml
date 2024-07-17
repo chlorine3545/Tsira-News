@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/details"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <Toolbar
@@ -19,58 +19,68 @@
             android:background="@android:color/transparent"
             android:navigationIcon="@drawable/comeback"
             android:title="@string/details_title_placeholder">
+
         </Toolbar>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/details_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" />
+<!--        <androidx.viewpager2.widget.ViewPager2-->
+<!--            android:id="@+id/details_image"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="200dp" />-->
 
-       <androidx.cardview.widget.CardView
-    android:id="@+id/ai_summary_card"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/ai_summary_title"
-            android:textSize="20sp"
-            android:textStyle="bold">
-        </TextView>
-
-        <TextView
-            android:id="@+id/ai_summary"
-            android:text="@string/ai_summary_placeholder"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ai_summary_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp">
-        </TextView>
+            android:layout_margin="10dp">
 
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/details_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/ai_summary_title"
+                    android:textSize="20sp"
+                    android:textStyle="bold">
+
+                </TextView>
+
+                <TextView
+                    android:id="@+id/ai_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/ai_summary_placeholder">
+
+                </TextView>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+<!--        <TextView-->
+<!--            android:id="@+id/details_content"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="18sp">-->
+
+<!--        </TextView>-->
+
+        <WebView
+            android:id="@+id/details_webView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textColor="@color/black"
-            android:textSize="18sp">
-
-        </TextView>
+            android:background="@android:color/transparent">
+        </WebView>
 
         <RelativeLayout
+            android:id="@+id/details_btm_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/details_btm_bar">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/details_time"
@@ -90,8 +100,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/like_btn_content_description"
                 android:src="@drawable/like"
-                android:tooltipText="收藏"
-                >
+                android:tooltipText="收藏">
 
             </ImageButton>
         </RelativeLayout>
