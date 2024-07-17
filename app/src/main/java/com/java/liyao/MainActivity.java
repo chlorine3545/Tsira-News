@@ -5,6 +5,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,7 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.java.liyao.entity.UserInfo;
 
 public class MainActivity extends AppCompatActivity {
-    private String[] cats = {"娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"};
+    private final String[] cats = {"娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"};
 
     private TabLayout catTab;
     private ViewPager2 viewPg2;
@@ -40,6 +41,19 @@ public class MainActivity extends AppCompatActivity {
         View headerView = nav_view.getHeaderView(0);
         tv_nickname = headerView.findViewById(R.id.tv_nickname);
         tv_user_email = headerView.findViewById(R.id.tv_user_email);
+
+        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if (item.getItemId() == R.id.nav_history){
+                    Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+                    startActivity(intent);
+                }
+                // 剩下的一会再写
+                return true;
+            }
+        });
 
         // 设置adapter
         viewPg2.setAdapter(new FragmentStateAdapter(this) {
@@ -63,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // 设置viewPager选中当前页
-                viewPg2.setCurrentItem(tab.getPosition(),false);
+                viewPg2.setCurrentItem(tab.getPosition(),true);
             }
 
             @Override

@@ -1,9 +1,10 @@
 package com.java.liyao;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
 
-import java.io.IOException;
+import android.util.Log;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,11 +26,18 @@ public class NewsInfo {
         return data;
     }
 
+    public void generateUniqueID() {
+        for (DataDTO data : data) {
+            data.generateSingleUniqueID();
+        }
+        // Log.d("UniqueIDSuccessfully", "generateUniqueID: 生成唯一标识符成功！");
+    }
+
     // 全给老子变浮点数（核善的危啸）
 
     @lombok.NoArgsConstructor
     @lombok.Data
-    public static class DataDTO {
+    public static class DataDTO implements Serializable {
         @com.fasterxml.jackson.annotation.JsonProperty("image")
         private String image; // TMD 到底是哪个大聪明设计的字符串形状的数组？！
         @com.fasterxml.jackson.annotation.JsonProperty("publishTime")
@@ -70,6 +78,17 @@ public class NewsInfo {
         private String category;
         @com.fasterxml.jackson.annotation.JsonProperty("who")
         private List<WhoDTO> who;
+
+        public String getUniqueID() {
+            return uniqueID;
+        }
+
+        private String uniqueID;
+
+        private void generateSingleUniqueID() {
+            String source = this.title + this.publishTime + this.publisher;
+            this.uniqueID = sha256Hex(source);
+        }
 
         // Getter
         public String getPublisher() {
@@ -169,7 +188,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class KeywordsDTO {
+        public static class KeywordsDTO implements Serializable{
             @com.fasterxml.jackson.annotation.JsonProperty("score")
             private Double score;
             @com.fasterxml.jackson.annotation.JsonProperty("word")
@@ -178,7 +197,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class WhenDTO {
+        public static class WhenDTO implements Serializable{
             @com.fasterxml.jackson.annotation.JsonProperty("score")
             private Double score;
             @com.fasterxml.jackson.annotation.JsonProperty("word")
@@ -187,7 +206,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class PersonsDTO {
+        public static class PersonsDTO implements Serializable{
             @com.fasterxml.jackson.annotation.JsonProperty("count")
             private Double count;
             @com.fasterxml.jackson.annotation.JsonProperty("linkedURL")
@@ -198,7 +217,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class OrganizationsDTO {
+        public static class OrganizationsDTO implements Serializable{
             @com.fasterxml.jackson.annotation.JsonProperty("count")
             private Double count;
             @com.fasterxml.jackson.annotation.JsonProperty("linkedURL")
@@ -209,7 +228,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class LocationsDTO {
+        public static class LocationsDTO implements Serializable{
             @com.fasterxml.jackson.annotation.JsonProperty("count")
             private Double count;
             @com.fasterxml.jackson.annotation.JsonProperty("linkedURL")
@@ -220,7 +239,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class WhoDTO {
+        public static class WhoDTO implements Serializable{
             @com.fasterxml.jackson.annotation.JsonProperty("score")
             private Double score;
             @com.fasterxml.jackson.annotation.JsonProperty("word")

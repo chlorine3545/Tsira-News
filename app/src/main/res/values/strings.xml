@@ -20,4 +20,16 @@
     <string name="register_title">注册</string>
     <string name="lets_register">注册</string>
     <string name="please_input_nickname">请输入昵称</string>
+    <string name="ai_summary_title">AI摘要：</string>
+    <string name="details_title_placeholder">这是用来占位的标题</string>
+    <string name="search_placeholder">搜点啥？不保证有哈</string>
+    <string name="history_title">历史记录</string>
+    <string name="news_card_title_placeholder">Java 大作业已致使多人死亡</string>
+    <string name="news_card_publisher_placeholder">华清大学新闻办公室</string>
+    <string name="news_card_time_placeholder">1145-1-41 91:98:00</string>
+    <string name="history_menu">历史记录</string>
+    <string name="home_menu">首页</string>
+    <string name="account_menu">账号信息</string>
+    <string name="logout_menu">退出登录</string>
+    <string name="about_menu">关于APP</string>
 </resources>

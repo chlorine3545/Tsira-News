@@ -1,5 +1,6 @@
 package com.java.liyao;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,14 +15,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.java.liyao.adapter.NewsListAdapter;
+import com.java.liyao.db.HistoryDbHelper;
+import com.java.liyao.entity.HistoryInfo;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,6 +42,8 @@ public class CatTabFragment extends Fragment {
     private View rootView;
     private RecyclerView newsList;
     private NewsListAdapter newsListAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private HashSet<String> alreadyViewed;
 
     public CatTabFragment() {
         // 初始化 Handler，统一处理消息
@@ -45,8 +53,9 @@ public class CatTabFragment extends Fragment {
                 super.handleMessage(msg);
                 if (msg.what == 200) {
                     String data = (String) msg.obj;
-                    NewsInfo newsInfo = new Gson().fromJson(data, NewsInfo.class);
-                    if (newsInfo != null && newsListAdapter != null) {
+                    NewsInfo newsInfo = new Gson().fromJson(data, NewsInfo.class); // 这个步骤使用了 Gson 将 JSON 字符串转换为 Java 对象
+                    newsInfo.generateUniqueID();
+                    if (newsListAdapter != null) {
                         newsListAdapter.setListData(newsInfo.getData());
                     } else {
                         Toast.makeText(getActivity(), "获取数据失败！", Toast.LENGTH_SHORT).show();
@@ -70,6 +79,7 @@ public class CatTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_cat_tab, container, false);
         newsList = rootView.findViewById(R.id.newsList);
+        swipeRefreshLayout = rootView.findViewById(R.id.swipeRefreshLayout);
         return rootView;
     }
 
@@ -77,7 +87,34 @@ public class CatTabFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         newsListAdapter = new NewsListAdapter(getActivity());
+        alreadyViewed = HistoryDbHelper.getInstance(getActivity()).getHistory(null).stream().map(HistoryInfo::getUnique_id).collect(Collectors.toCollection(HashSet::new));
+        newsListAdapter.setAlreadyViewed(alreadyViewed);
         newsList.setAdapter(newsListAdapter);
+
+        newsListAdapter.setOnItemClickListener((new NewsListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(NewsInfo.DataDTO dataDTO, int position) {
+                // Log.d("Entered", "onItemClick: 已进入点击事件");
+                // 还是那句话，凡是涉及到 Activity 的跳转，都需要 Intent
+                Intent intent = new Intent(getActivity(), NewsDetailsActivity.class);
+                intent.putExtra("dataDTO", dataDTO);
+                startActivity(intent);
+                // Log.d("JUMPED", "onItemClick: 成功开启活动：" + dataDTO.getTitle());
+            }
+        }));
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                try {
+                    fetcher();
+                } catch (UnsupportedEncodingException e) {
+                    Log.e("EncodingError", "Unsupported Encoding Exception", e);
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         if (getArguments() != null) {
             catT = getArguments().getString(ARG_PARAM);
         }
@@ -119,4 +156,6 @@ public class CatTabFragment extends Fragment {
             }
         });
     }
+
+    // 还需要一个关键的功能：对于浏览过的页面卡片，显示为灰色
 }

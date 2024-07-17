@@ -2,24 +2,29 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/history"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".NewsActivity">
+    android:orientation="vertical"
+    tools:context=".HistoryActivity">
 
-    <androidx.appcompat.widget.Toolbar
+    <Toolbar
+        android:id="@+id/history_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/teal_200"
-        app:titleTextColor="@color/white"
-        app:title="新闻列表"/>
+        android:background="@android:color/transparent"
+        android:navigationIcon="@drawable/comeback"
+        android:title="@string/history_title">
 
+    </Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/newsList"
         android:layout_width="match_parent"
-        tools:listitem="@layout/new_item"
+        android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:layout_height="wrap_content"/>
+        tools:listitem="@layout/new_item">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
