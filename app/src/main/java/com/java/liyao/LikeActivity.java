@@ -34,7 +34,7 @@ public class LikeActivity extends AppCompatActivity {
 
         newsData = new ArrayList<>();
 
-        // 获取历史记录
+        // 获取收藏列表
         UserInfo userInfo = UserInfo.getUserinfo();
         String eml = userInfo == null ? null : userInfo.getUser_email();
         List<HistoryInfo> like = LikeDbHelper.getInstance(LikeActivity.this).getLike(eml);

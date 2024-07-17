@@ -29,9 +29,14 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
     private List<NewsInfo.DataDTO> mDataDTOList = new ArrayList<>();
     private Context mContext;
     HashSet<String> alreadyViewed = new HashSet<>();
+    HashSet<String> alreadyLiked = new HashSet<>();
 
     public void setAlreadyViewed(HashSet<String> alreadyViewed) {
         this.alreadyViewed = alreadyViewed;
+    }
+
+    public void setAlreadyLiked(HashSet<String> alreadyLiked) {
+        this.alreadyLiked = alreadyLiked;
     }
 
     public NewsListAdapter(Context context) {
@@ -45,6 +50,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
 
     public boolean isViewed(String unique_id) {
         return alreadyViewed.contains(unique_id);
+    }
+
+    public boolean isLiked(String unique_id) {
+        return alreadyLiked.contains(unique_id);
     }
 
     @NonNull

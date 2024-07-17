@@ -84,15 +84,6 @@ public class NewsInfo {
         }
 
         private String uniqueID;
-        private boolean isLiked = false;
-
-        public boolean isLiked() {
-            return isLiked;
-        }
-
-        public void setLiked(boolean liked) {
-            isLiked = liked;
-        }
 
         private void generateSingleUniqueID() {
             String source = this.title + this.publishTime + this.publisher;

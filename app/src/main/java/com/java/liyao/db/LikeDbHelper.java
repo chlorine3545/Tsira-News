@@ -114,8 +114,17 @@ public class LikeDbHelper extends SQLiteOpenHelper {
 
     public int deleteLike(String unique_id, String userEmail) {
         SQLiteDatabase db = getWritableDatabase();
-        String whereClause = "unique_id=? and user_email=?";
-        String[] whereArgs = {unique_id, userEmail};
+        // 可能是这里没有考虑邮箱为 null（未登录）的情况，所以没能成功删除
+        String whereClause;
+        String[] whereArgs;
+        if (userEmail == null) {
+            whereClause = "unique_id=?";
+            whereArgs = new String[]{unique_id};
+        } else {
+            whereClause = "unique_id=? and user_email=?";
+            whereArgs = new String[]{unique_id, userEmail};
+        }
+
         int rowsDeleted = db.delete("like_table", whereClause, whereArgs);
         db.close();
         return rowsDeleted;

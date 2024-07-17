@@ -60,6 +60,15 @@ public class NewsDetailsActivity extends AppCompatActivity {
         String eml = userInfo == null ? null : userInfo.getUser_email();
         HistoryDbHelper.getInstance(NewsDetailsActivity.this).addHistory(eml, dataDTO.getUniqueID(), s);
 
+        boolean isLiked = LikeDbHelper.getInstance(NewsDetailsActivity.this).searchLike(dataDTO.getUniqueID(), eml);
+        if (isLiked) {
+            like_btn.setImageResource(R.drawable.liked);
+            like_btn.setTooltipText("取消收藏");
+        } else {
+            like_btn.setImageResource(R.drawable.like);
+            like_btn.setTooltipText("收藏");
+        }
+
         // AI 摘要的逻辑比较复杂，暂时不写
         // 图片的逻辑也比较复杂，暂时不写
 
@@ -77,16 +86,16 @@ public class NewsDetailsActivity extends AppCompatActivity {
         like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isLiked = dataDTO.isLiked();
                 if (isLiked) {
                     // 把心形变白
-                    dataDTO.setLiked(false);
                     like_btn.setTooltipText("收藏");
+                    like_btn.setImageResource(R.drawable.like);
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).deleteLike(dataDTO.getUniqueID(), eml);
                     Toast.makeText(NewsDetailsActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
+                    Log.d("UnlikedSuccessfully", "onClick: 已经取消收藏");
                 } else {
                     // 应该把心形变红，这个怎么办呢？
-                    dataDTO.setLiked(true);
+                    like_btn.setImageResource(R.drawable.liked);
                     like_btn.setTooltipText("取消收藏");
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).addLike(eml, dataDTO.getUniqueID(), s);
                     Toast.makeText(NewsDetailsActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
