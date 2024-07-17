@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -19,15 +21,15 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.java.liyao.entity.UserInfo;
 
 public class MainActivity extends AppCompatActivity {
-    private final String[] cats = {"娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"};
+    private final String[] cats = {"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"};
 
     private TabLayout catTab;
     private ViewPager2 viewPg2;
 
+    private Toolbar main_toolbar;
     private NavigationView nav_view;
     private TextView tv_nickname;
     private TextView tv_user_email;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         viewPg2 = findViewById(R.id.viewPg2);
         catTab = findViewById(R.id.catTab);
         nav_view = findViewById(R.id.nav_view);
+        main_toolbar = findViewById(R.id.main_toolbar);
         View headerView = nav_view.getHeaderView(0);
         tv_nickname = headerView.findViewById(R.id.tv_nickname);
         tv_user_email = headerView.findViewById(R.id.tv_user_email);
@@ -55,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 // 剩下的一会再写
                 return true;
+            }
+        });
+
+        main_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+                drawerLayout.open();
             }
         });
 

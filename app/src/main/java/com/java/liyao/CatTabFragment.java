@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import okhttp3.Call;
@@ -136,7 +137,7 @@ public class CatTabFragment extends Fragment {
         OkHttpClient okHttpClient = new OkHttpClient();
         // 回来收拾这个写死的 URL
         String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2024-07-05&endDate=2024-08-30&words=&page=1&categories=";
-        String encodedCatT = URLEncoder.encode(catT, StandardCharsets.UTF_8.toString());
+        String encodedCatT = Objects.equals(catT, "全部") ? "" : URLEncoder.encode(catT, StandardCharsets.UTF_8.toString());
         Request request = new Request.Builder()
                 .url(baseUrl + encodedCatT)
                 .get()
