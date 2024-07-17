@@ -132,4 +132,10 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
     public interface OnItemClickListener {
         void onItemClick(NewsInfo.DataDTO dataDTO, int position);
     }
+
+    public void addListData(List<NewsInfo.DataDTO> newData) {
+        int startPosition = this.mDataDTOList.size();
+        this.mDataDTOList.addAll(newData);
+        notifyItemRangeInserted(startPosition, newData.size());
+    }
 }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -49,6 +50,9 @@ public class CatTabFragment extends Fragment {
     private HashSet<String> alreadyViewed;
     private HashSet<String> alreadyLiked;
 
+    private boolean isLoading = false;
+    private int currentPage = 1;
+
     public CatTabFragment() {
         // 初始化 Handler，统一处理消息
         mHandler = new Handler(Looper.getMainLooper()) {
@@ -57,10 +61,14 @@ public class CatTabFragment extends Fragment {
                 super.handleMessage(msg);
                 if (msg.what == 200) {
                     String data = (String) msg.obj;
-                    NewsInfo newsInfo = new Gson().fromJson(data, NewsInfo.class); // 这个步骤使用了 Gson 将 JSON 字符串转换为 Java 对象
+                    NewsInfo newsInfo = new Gson().fromJson(data, NewsInfo.class);
                     newsInfo.generateUniqueID();
                     if (newsListAdapter != null) {
-                        newsListAdapter.setListData(newsInfo.getData());
+                        if (currentPage == 1) {
+                            newsListAdapter.setListData(newsInfo.getData());
+                        } else {
+                            newsListAdapter.addListData(newsInfo.getData());
+                        }
                     } else {
                         Toast.makeText(getActivity(), "获取数据失败！", Toast.LENGTH_SHORT).show();
                     }
@@ -111,9 +119,11 @@ public class CatTabFragment extends Fragment {
             }
         }));
 
+        // 下滑刷新事件
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                currentPage = 1; // 为什么要重置 currentPage？
                 try {
                     fetcher();
                 } catch (UnsupportedEncodingException e) {
@@ -131,15 +141,43 @@ public class CatTabFragment extends Fragment {
         } catch (UnsupportedEncodingException e) {
             Log.e("EncodingError", "Unsupported Encoding Exception", e);
         }
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        newsList.setLayoutManager(layoutManager);
+
+        newsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    loadMoreItems();
+                }
+            }
+        });
+    }
+
+    private void loadMoreItems() {
+        isLoading = true;
+        currentPage++;
+        try {
+            fetcher();
+        } catch (UnsupportedEncodingException e) {
+            Log.e("EncodingError", "Unsupported Encoding Exception", e);
+        }
     }
 
     private void fetcher() throws UnsupportedEncodingException {
         OkHttpClient okHttpClient = new OkHttpClient();
-        // 回来收拾这个写死的 URL
-        String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2024-07-05&endDate=2024-08-30&words=&page=1&categories=";
+        String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2023-01-01&endDate=2024-08-30&words=&categories=";
         String encodedCatT = Objects.equals(catT, "全部") ? "" : URLEncoder.encode(catT, StandardCharsets.UTF_8.toString());
+        String url = baseUrl + encodedCatT + "&page=" + currentPage;
         Request request = new Request.Builder()
-                .url(baseUrl + encodedCatT)
+                .url(url)
                 .get()
                 .build();
         Call call = okHttpClient.newCall(request);
@@ -147,20 +185,21 @@ public class CatTabFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d("NetworkError", "onFailure: " + e.toString());
+                isLoading = false;
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful() && response.body() != null) {
                     String data = response.body().string();
-                    // Log.d("Connected", data);
-                    Message message = Message.obtain(); // 使用 obtain 方法获取 Message 实例。咱也不知道为什么，反正 Copilot 说这样写
+                    Message message = Message.obtain();
                     message.what = 200;
                     message.obj = data;
                     mHandler.sendMessage(message);
                 } else {
                     Log.d("NetworkError", "Response not successful or body is null");
                 }
+                isLoading = false;
             }
         });
     }
