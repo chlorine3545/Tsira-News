@@ -32,6 +32,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES")
+    }
 }
 
 dependencies {
@@ -57,6 +61,9 @@ dependencies {
     implementation(libs.jackson.annotations)
     implementation(libs.commons.codec)
     implementation(libs.glide.v4120)
+    implementation(libs.oapi.java.sdk)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
     annotationProcessor(libs.compiler)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

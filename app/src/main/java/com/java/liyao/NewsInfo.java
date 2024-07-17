@@ -85,6 +85,16 @@ public class NewsInfo {
 
         private String uniqueID;
 
+        public String getAiSummary() {
+            return aiSummary;
+        }
+
+        public void setAiSummary(String aiSummary) {
+            this.aiSummary = aiSummary;
+        }
+
+        private String aiSummary = "";
+
         private void generateSingleUniqueID() {
             String source = this.title + this.publishTime + this.publisher;
             this.uniqueID = sha256Hex(source);

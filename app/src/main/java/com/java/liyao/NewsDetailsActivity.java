@@ -23,6 +23,8 @@ import com.java.liyao.entity.UserInfo;
 
 import org.w3c.dom.Text;
 
+import java.util.Objects;
+
 public class NewsDetailsActivity extends AppCompatActivity {
 
     private NewsInfo.DataDTO dataDTO;
@@ -69,7 +71,23 @@ public class NewsDetailsActivity extends AppCompatActivity {
             like_btn.setTooltipText("收藏");
         }
 
-        // AI 摘要的逻辑比较复杂，暂时不写
+        // AI 摘要的逻辑比较复杂
+        ai_summary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 摘要的逻辑比较复杂，暂时不写
+                if (Objects.equals(dataDTO.getAiSummary(), "")) {
+                    ai_summary.setText("AI摘要生成中...");
+                    // 这里需要调用接口生成摘要，先放这里搁着
+                    // 开造！（慈禧音）
+                    String aiSummary = AiSummary.aiSummaryInvoke(dataDTO.getContent());
+                    dataDTO.setAiSummary(aiSummary);
+                    ai_summary.setText(aiSummary);
+                } else {
+                    ai_summary.setText(dataDTO.getAiSummary());
+                }
+            }
+        });
         // 图片的逻辑也比较复杂，暂时不写
 
         details_content.setText(dataDTO.getContent());
@@ -83,6 +101,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         });
 
         // 收藏按钮，心里有点没底 qaq
+        // 你过关！（超大声）
         like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +113,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
                     Toast.makeText(NewsDetailsActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
                     Log.d("UnlikedSuccessfully", "onClick: 已经取消收藏");
                 } else {
-                    // 应该把心形变红，这个怎么办呢？
+                    // 把心形变红
                     like_btn.setImageResource(R.drawable.liked);
                     like_btn.setTooltipText("取消收藏");
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).addLike(eml, dataDTO.getUniqueID(), s);
