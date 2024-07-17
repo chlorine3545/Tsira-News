@@ -27,44 +27,68 @@
             android:layout_height="200dp" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/ai_summary_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:id="@+id/ai_summary_card">
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/ai_summary_title"
                 android:layout_marginStart="5dp"
-                android:textStyle="bold"
-                android:textSize="20sp">
+                android:text="@string/ai_summary_title"
+                android:textSize="20sp"
+                android:textStyle="bold">
+
             </TextView>
 
             <TextView
+                android:id="@+id/ai_summary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/ai_summary"
                 android:layout_marginStart="5dp">
+
             </TextView>
 
         </androidx.cardview.widget.CardView>
 
         <TextView
+            android:id="@+id/details_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/details_content"
+            android:layout_margin="10dp"
             android:textColor="@color/black"
-            android:textSize="18sp"
-            android:layout_margin="10dp">
+            android:textSize="18sp">
+
         </TextView>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/details_time"
-            android:layout_marginStart="5dp">
-        </TextView>
+            android:id="@+id/details_btm_bar">
 
+            <TextView
+                android:id="@+id/details_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="50dp">
+
+            </TextView>
+
+            <ImageButton
+                android:id="@+id/like_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/like_btn_content_description"
+                android:src="@drawable/like"
+                android:tooltipText="收藏"
+                >
+
+            </ImageButton>
+        </RelativeLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

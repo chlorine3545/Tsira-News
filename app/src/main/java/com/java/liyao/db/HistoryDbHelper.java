@@ -30,8 +30,6 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
         return historyDbHelper;
     }
 
-    // 历史记录的存储对象应该是新闻对象（DataDTO），但是这是一个极为复杂的类，怎么办呢？
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         //创建user_table表
@@ -48,7 +46,7 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
     }
 
     public int addHistory(String user_email, String unique_id, String news_json) {
-        if (!searchHistory(unique_id)) {
+        if (!searchHistory(unique_id, user_email)) {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues values = new ContentValues();
 
@@ -92,13 +90,20 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public boolean searchHistory(String uk) {
+    public boolean searchHistory(String uk, String ue) {
         SQLiteDatabase db = getReadableDatabase();
-        HistoryInfo historyInfo = null;
-        String sql = "select history_id,user_email,unique_id,news_json  from history_table where unique_id=?";
-        String[] selectionArgs = {uk};
-        Cursor cursor = db.rawQuery(sql, selectionArgs);
-        boolean result = cursor.getCount() > 0; // 这个是最可靠的方法，既能正常返回，又能防止内存泄露
+        String sql;
+        Cursor cursor;
+        if (ue == null) {
+            // If user_email is null, modify the query to not include user_email in the WHERE clause
+            sql = "select history_id, user_email, unique_id, news_json from history_table where unique_id=?";
+            cursor = db.rawQuery(sql, new String[]{uk});
+        } else {
+            // If user_email is not null, include it in the WHERE clause
+            sql = "select history_id, user_email, unique_id, news_json from history_table where unique_id=? and user_email=?";
+            cursor = db.rawQuery(sql, new String[]{uk, ue});
+        }
+        boolean result = cursor.getCount() > 0;
         cursor.close();
         db.close();
         return result;

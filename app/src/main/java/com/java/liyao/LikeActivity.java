@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.java.liyao.adapter.NewsListAdapter;
-import com.java.liyao.db.HistoryDbHelper;
+import com.java.liyao.db.LikeDbHelper;
 import com.java.liyao.entity.HistoryInfo;
 import com.java.liyao.entity.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryActivity extends AppCompatActivity {
+public class LikeActivity extends AppCompatActivity {
     private RecyclerView newsList;
     private NewsListAdapter newsListAdapter;
     private List<NewsInfo.DataDTO> newsData;
@@ -26,7 +26,7 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_like);
 
         newsList = findViewById(R.id.newsList);
         newsListAdapter = new NewsListAdapter(this);
@@ -37,11 +37,11 @@ public class HistoryActivity extends AppCompatActivity {
         // 获取历史记录
         UserInfo userInfo = UserInfo.getUserinfo();
         String eml = userInfo == null ? null : userInfo.getUser_email();
-        List<HistoryInfo> history = HistoryDbHelper.getInstance(HistoryActivity.this).getHistory(eml);
+        List<HistoryInfo> like = LikeDbHelper.getInstance(LikeActivity.this).getLike(eml);
 
         Gson gson = new Gson();
-        for (int i = 0; i < history.size(); i++) {
-            newsData.add(gson.fromJson(history.get(i).getNews_json(), NewsInfo.DataDTO.class));
+        for (int i = 0; i < like.size(); i++) {
+            newsData.add(gson.fromJson(like.get(i).getNews_json(), NewsInfo.DataDTO.class));
         }
 
         newsListAdapter.setListData(newsData);
@@ -49,13 +49,13 @@ public class HistoryActivity extends AppCompatActivity {
         newsListAdapter.setOnItemClickListener((new NewsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(NewsInfo.DataDTO dataDTO, int position) {
-                Intent intent = new Intent(HistoryActivity.this, NewsDetailsActivity.class);
+                Intent intent = new Intent(LikeActivity.this, NewsDetailsActivity.class);
                 intent.putExtra("dataDTO", dataDTO);
                 startActivity(intent);
             }
         }));
 
-        findViewById(R.id.history_toolbar).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.like_toolbar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // HistoryDbHelper.getInstance(HistoryActivity.this).deleteAllHistory(); // 先都清除一下，方便后续测试

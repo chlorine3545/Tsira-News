@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.nav_history){
                     Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                     startActivity(intent);
+                } else if (item.getItemId() == R.id.nav_like) {
+                    Intent intent = new Intent(MainActivity.this, LikeActivity.class);
+                    startActivity(intent);
                 }
                 // 剩下的一会再写
                 return true;

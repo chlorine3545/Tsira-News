@@ -32,4 +32,7 @@
     <string name="account_menu">账号信息</string>
     <string name="logout_menu">退出登录</string>
     <string name="about_menu">关于APP</string>
+    <string name="like_title">我的收藏</string>
+    <string name="like_btn_content_description">收藏按钮</string>
+    <string name="like_menu">我的收藏</string>
 </resources>

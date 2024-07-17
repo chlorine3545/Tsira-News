@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.java.liyao.adapter.NewsListAdapter;
 import com.java.liyao.db.HistoryDbHelper;
 import com.java.liyao.entity.HistoryInfo;
+import com.java.liyao.entity.UserInfo;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -87,7 +88,9 @@ public class CatTabFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         newsListAdapter = new NewsListAdapter(getActivity());
-        alreadyViewed = HistoryDbHelper.getInstance(getActivity()).getHistory(null).stream().map(HistoryInfo::getUnique_id).collect(Collectors.toCollection(HashSet::new));
+        UserInfo userInfo = UserInfo.getUserinfo();
+        String eml = userInfo == null ? null : userInfo.getUser_email();
+        alreadyViewed = HistoryDbHelper.getInstance(getActivity()).getHistory(eml).stream().map(HistoryInfo::getUnique_id).collect(Collectors.toCollection(HashSet::new));
         newsListAdapter.setAlreadyViewed(alreadyViewed);
         newsList.setAdapter(newsListAdapter);
 

@@ -50,7 +50,7 @@ public class LikeDbHelper extends SQLiteOpenHelper {
     }
 
     public int addLike(String user_email, String unique_id, String news_json) {
-        if (!searchLike(unique_id)) {
+        if (!searchLike(unique_id, user_email)) {
             SQLiteDatabase db = getWritableDatabase();
             ContentValues values = new ContentValues();
 
@@ -93,16 +93,32 @@ public class LikeDbHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public boolean searchLike(String uk) {
+    public boolean searchLike(String uk, String ue) {
         SQLiteDatabase db = getReadableDatabase();
-        HistoryInfo historyInfo = null;
-        String sql = "select like_id,user_email,unique_id,news_json  from like_table where unique_id=?";
-        String[] selectionArgs = {uk};
-        Cursor cursor = db.rawQuery(sql, selectionArgs);
+        String sql;
+        Cursor cursor;
+        if (ue == null) {
+            // If user_email is null, modify the query to not include user_email in the WHERE clause
+            sql = "select like_id, user_email, unique_id, news_json from like_table where unique_id=?";
+            cursor = db.rawQuery(sql, new String[]{uk});
+        } else {
+            // If user_email is not null, include it in the WHERE clause
+            sql = "select like_id, user_email, unique_id, news_json from like_table where unique_id=? and user_email=?";
+            cursor = db.rawQuery(sql, new String[]{uk, ue});
+        }
         boolean result = cursor.getCount() > 0; // 这个是最可靠的方法，既能正常返回，又能防止内存泄露
         cursor.close();
         db.close();
         return result;
+    }
+
+    public int deleteLike(String unique_id, String userEmail) {
+        SQLiteDatabase db = getWritableDatabase();
+        String whereClause = "unique_id=? and user_email=?";
+        String[] whereArgs = {unique_id, userEmail};
+        int rowsDeleted = db.delete("like_table", whereClause, whereArgs);
+        db.close();
+        return rowsDeleted;
     }
 
     public int deleteAllLike() {
