@@ -50,6 +50,13 @@ public class NewsDetailsActivity extends AppCompatActivity {
     private ImageButton like_btn;
     private WebView details_webView;
 
+    void setAi_summary_DTO(String s) {
+        runOnUiThread(() -> {
+            ai_summary.setText(s);
+            dataDTO.setAiSummary(s);
+        });
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,9 +122,12 @@ public class NewsDetailsActivity extends AppCompatActivity {
                     ai_summary.setText("AI摘要生成中...");
                     // 这里需要调用接口生成摘要，先放这里搁着
                     // 开造！（慈禧音）
-                    String aiSummary = AiSummary.aiSummaryInvoke(dataDTO.getContent());
-                    dataDTO.setAiSummary(aiSummary);
-                    ai_summary.setText(aiSummary);
+                    Log.d("AI_SUMMARY", dataDTO.getContent());
+                    new Thread(() -> {
+                        String aiSummary = AiSummary.aiSummaryInvoke(dataDTO.getContent());
+                        Log.d("AI_SUMMARY_RESULT", aiSummary);
+                        setAi_summary_DTO(aiSummary);
+                    }).start();
                 } else {
                     ai_summary.setText(dataDTO.getAiSummary());
                 }
