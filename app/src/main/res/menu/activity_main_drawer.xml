@@ -13,7 +13,11 @@
             android:icon="@drawable/like_menu_icon"
             android:title="@string/like_menu" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_category"
+            android:icon="@drawable/baseline_category_24"
+            android:title="@string/category_menu" />
+        <item
+            android:id="@+id/nav_account"
             android:icon="@drawable/baseline_account_circle_24"
             android:title="@string/account_menu" />
         <!-- 扎个眼，这块 Android studio 搜不到图标 -->

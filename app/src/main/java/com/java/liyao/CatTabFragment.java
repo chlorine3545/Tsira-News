@@ -205,4 +205,5 @@ public class CatTabFragment extends Fragment {
     }
 
     // 还需要一个关键的功能：对于浏览过的页面卡片，显示为灰色
+    // 好的，解决了。下面做分类标签列表。
 }

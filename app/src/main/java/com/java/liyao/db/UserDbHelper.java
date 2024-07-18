@@ -28,15 +28,15 @@ public class UserDbHelper extends SQLiteOpenHelper {
         return sHelper;
     }
 
-@Override
-public void onCreate(SQLiteDatabase db) {
-    db.execSQL("CREATE TABLE user_table(" +
-            "user_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "nickname TEXT, " +
-            "user_email TEXT, " +
-            "password TEXT" +
-            ")");
-}
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE user_table(" +
+                "user_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "nickname TEXT, " +
+                "user_email TEXT, " +
+                "password TEXT" +
+                ")");
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

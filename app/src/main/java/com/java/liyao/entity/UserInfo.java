@@ -1,18 +1,29 @@
 package com.java.liyao.entity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class UserInfo {
     private int user_id;
     private String nickname;
     private String user_email;
     private String password;
 
-    public static UserInfo sUserInfo;
+    public static UserInfo sUserInfo; // 没登录的时候就是 null
+
+    public List<String> categories = new ArrayList<>(Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"}));
+    // 设置成公开的有点不好，但是为了方便，就这样了。
 
     public UserInfo(int user_id, String nickname, String user_email, String password) {
         this.user_id = user_id;
         this.nickname = nickname;
         this.user_email = user_email;
         this.password = password;
+    }
+
+    public List<String> getCategories() {
+        return categories;
     }
 
     public static UserInfo getUserinfo() {

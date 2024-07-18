@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_category"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".EditCategoriesActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/category_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:navigationIcon="@drawable/comeback"
+        app:title="编辑分类" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:id="@+id/category_main"
+        android:layout_height="wrap_content"
+        android:alignmentMode="alignMargins"
+        android:columnCount="2"
+        android:padding="8dp"
+        android:useDefaultMargins="true">
+
+        <!-- 添加按钮 -->
+        <Button
+            android:id="@+id/btn_category1"
+            style="@style/CategoryButton"
+            android:text="全部" />
+
+        <Button
+            android:id="@+id/btn_category2"
+            style="@style/CategoryButton"
+            android:text="娱乐" />
+
+        <Button
+            android:id="@+id/btn_category3"
+            style="@style/CategoryButton"
+            android:text="军事" />
+
+        <Button
+            android:id="@+id/btn_category4"
+            style="@style/CategoryButton"
+            android:text="教育" />
+
+        <Button
+            android:id="@+id/btn_category5"
+            style="@style/CategoryButton"
+            android:text="文化" />
+
+        <Button
+            android:id="@+id/btn_category6"
+            style="@style/CategoryButton"
+            android:text="健康" />
+
+        <Button
+            android:id="@+id/btn_category7"
+            style="@style/CategoryButton"
+            android:text="财经" />
+        <Button
+            android:id="@+id/btn_category8"
+            style="@style/CategoryButton"
+            android:text="体育" />
+        <Button
+            android:id="@+id/btn_category9"
+            style="@style/CategoryButton"
+            android:text="汽车" />
+        <Button
+            android:id="@+id/btn_category10"
+            style="@style/CategoryButton"
+            android:text="科技" />
+
+        <Button
+            android:id="@+id/btn_category11"
+            style="@style/CategoryButton"
+            android:text="社会" />
+
+    </GridLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

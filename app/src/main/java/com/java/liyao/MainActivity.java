@@ -20,8 +20,15 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.java.liyao.entity.UserInfo;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
-    private final String[] cats = {"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"};
+    private final List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
+    UserInfo userInfo = UserInfo.getUserinfo();
+    private List<String> cats = userInfo == null ? allCats : userInfo.getCategories();
+    // 这个列表不能是 Final 的，因为要编辑。
+    // 循序渐进。先把 cats 过渡为 List
 
     private TabLayout catTab;
     private ViewPager2 viewPg2;
@@ -49,11 +56,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                if (item.getItemId() == R.id.nav_history){
+                if (item.getItemId() == R.id.nav_history) {
                     Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.nav_like) {
                     Intent intent = new Intent(MainActivity.this, LikeActivity.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.nav_category) {
+                    Intent intent = new Intent(MainActivity.this, EditCategoriesActivity.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.nav_account) {
+                    Intent intent = new Intent(MainActivity.this, LikeActivity.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.nav_about) {
+                    Intent intent = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intent);
                 }
                 // 剩下的一会再写
@@ -75,14 +91,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public Fragment createFragment(int position) {
                 //创建 NewsTabFragment页面
-                String title = cats[position];
+                String title = cats.get(position);
                 CatTabFragment ctf = CatTabFragment.newInstance(title);
                 return ctf;
             }
 
             @Override
             public int getItemCount() {
-                return cats.length;
+                return cats.size();
             }
         });
 
@@ -91,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // 设置viewPager选中当前页
-                viewPg2.setCurrentItem(tab.getPosition(),true);
+                viewPg2.setCurrentItem(tab.getPosition(), true);
             }
 
             @Override
@@ -109,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(catTab, viewPg2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(cats[position]);
+                tab.setText(cats.get(position));
             }
         });
 
@@ -119,14 +135,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        UserInfo userInfo = UserInfo.getUserinfo();
+        userInfo = UserInfo.getUserinfo();
         if (userInfo != null) {
             tv_nickname.setText(userInfo.getNickname());
             tv_user_email.setText(userInfo.getUser_email());
             tv_user_email.setVisibility(View.VISIBLE);
-        }
-        else {
+            cats = userInfo.getCategories();
+        } else {
             tv_nickname.setText("未登录");
             tv_user_email.setVisibility(View.GONE);
             tv_nickname.setOnClickListener(new View.OnClickListener() {
