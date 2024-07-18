@@ -13,7 +13,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.java.liyao.db.CatPrefDbHelper;
 import com.java.liyao.db.UserDbHelper;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -51,6 +55,8 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     long ret = UserDbHelper.getInstance(RegisterActivity.this).register(nickname, email, password);
                     if (ret > 0) {
+                        List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
+                        CatPrefDbHelper.getInstance(RegisterActivity.this).addCatPref(email, allCats.toString());
                         Toast.makeText(RegisterActivity.this, "注册成功！", Toast.LENGTH_SHORT).show();
                         finish();
                     }

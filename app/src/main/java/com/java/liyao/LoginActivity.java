@@ -13,8 +13,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.java.liyao.db.CatPrefDbHelper;
 import com.java.liyao.db.UserDbHelper;
 import com.java.liyao.entity.UserInfo;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,6 +53,11 @@ public class LoginActivity extends AppCompatActivity {
                     UserInfo userInfo = UserDbHelper.getInstance(LoginActivity.this).login(email);
                     if (null != userInfo && userInfo.getPassword().equals(password)) {
                         UserInfo.setUserinfo(userInfo);
+                        // 这段代码一般没必要加，是给我创建的存量用户的
+                        if (!CatPrefDbHelper.getInstance(LoginActivity.this).searchCatPref(userInfo.getUser_email())) {
+                            List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
+                            CatPrefDbHelper.getInstance(LoginActivity.this).addCatPref(email, allCats.toString());
+                        }
                         Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {

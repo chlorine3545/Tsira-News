@@ -18,15 +18,18 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.java.liyao.db.CatPrefDbHelper;
+import com.java.liyao.entity.CatPrefInfo;
 import com.java.liyao.entity.UserInfo;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private final List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
+    public static final List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
     UserInfo userInfo = UserInfo.getUserinfo();
-    private List<String> cats = userInfo == null ? allCats : userInfo.getCategories();
+    private List<String> cats = allCats;
+    // 得先获取用户的分类，如果没有登录，就用默认的分类。
     // 这个列表不能是 Final 的，因为要编辑。
     // 循序渐进。先把 cats 过渡为 List
 
@@ -42,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (userInfo != null) {
+            cats = CatPrefDbHelper.getInstance(this).getCatPrefList(userInfo.getUser_email());
+        }
 
         // 初始化控件
         viewPg2 = findViewById(R.id.viewPg2);
@@ -145,7 +152,15 @@ public class MainActivity extends AppCompatActivity {
             tv_nickname.setText(userInfo.getNickname());
             tv_user_email.setText(userInfo.getUser_email());
             tv_user_email.setVisibility(View.VISIBLE);
-            cats = userInfo.getCategories();
+            cats = CatPrefDbHelper.getInstance(this).getCatPrefList(userInfo.getUser_email());
+            // CatPrefDbHelper.getInstance(this).updateCatPref("chlorine@kawaii,com", allCats);
+            viewPg2.getAdapter().notifyDataSetChanged();
+            new TabLayoutMediator(catTab, viewPg2, new TabLayoutMediator.TabConfigurationStrategy() {
+                @Override
+                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                    tab.setText(cats.get(position));
+                }
+            }).attach();
         } else {
             tv_nickname.setText("未登录");
             tv_user_email.setVisibility(View.GONE);
