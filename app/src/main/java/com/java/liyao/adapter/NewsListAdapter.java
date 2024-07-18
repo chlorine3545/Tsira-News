@@ -73,7 +73,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
         holder.title.setText(dataDTO.getTitle());
         holder.date.setText(dataDTO.getPublishTime());
 
-        if (isViewed(dataDTO.getUniqueID())){
+        if (isViewed(dataDTO.getUniqueID())) {
             // Log.d("Viewed", "onBindViewHolder: 已浏览");
             // 为标题设置特殊颜色
             holder.title.setTextColor(mContext.getResources().getColor(R.color.grey));
@@ -83,10 +83,12 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
         // 这里似乎出现了问题，图片的请求都失败了？
         // 行，解决了。这个 image 的格式实在是太智障了。
         if (dataDTO.getImage() != null && !dataDTO.getImage().isEmpty()) {
-            // Log.d("coverImage", "onBindViewHolder: " + dataDTO.getImage().get(0));
-            Glide.with(mContext).load(dataDTO.getThumbnail()).into(holder.thumbnail_pic_s);
+            Glide.with(mContext)
+                    .load(dataDTO.getThumbnail())
+                    .override(300, 300) // 限制图片的尺寸
+                    .error(R.drawable.default_holder)
+                    .into(holder.thumbnail_pic_s);
         } else {
-            // 使用默认占位图片
             holder.thumbnail_pic_s.setImageResource(R.drawable.default_holder);
         }
 

@@ -66,7 +66,12 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, EditCategoriesActivity.class);
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.nav_account) {
-                    Intent intent = new Intent(MainActivity.this, LikeActivity.class);
+                    Intent intent;
+                    if (userInfo == null) {
+                        intent = new Intent(MainActivity.this, LoginActivity.class);
+                    } else {
+                        intent = new Intent(MainActivity.this, AccountActivity.class);
+                    }
                     startActivity(intent);
                 } else if (item.getItemId() == R.id.nav_about) {
                     Intent intent = new Intent(MainActivity.this, AboutActivity.class);

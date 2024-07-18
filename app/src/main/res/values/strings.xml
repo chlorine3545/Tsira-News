@@ -37,4 +37,13 @@
     <string name="like_menu">我的收藏</string>
     <string name="ai_summary_placeholder">点击生成摘要</string>
     <string name="category_menu">编辑分类</string>
+    <string name="change_password_title">修改密码</string>
+    <string name="change_email_title">修改邮箱</string>
+    <string name="account_password_placeholder">就不告诉你</string>
+    <string name="account_title">账号信息</string>
+    <string name="please_input_new_email">请输入新邮箱</string>
+    <string name="yes">确定</string>
+    <string name="please_input_old_password">请输入原密码</string>
+    <string name="please_input_new_password">请输入新密码</string>
+    <string name="please_input_new_password_again">请再次输入新密码</string>
 </resources>

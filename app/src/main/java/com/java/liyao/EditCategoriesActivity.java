@@ -47,6 +47,7 @@ public class EditCategoriesActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     // 懒一点，直接更换字体颜色好了。
                     // 换成很浅的灰色
+                    // TODO：实现真正的添加/删除功能
                     String catName = btn.getText().toString();
                     UserInfo userInfo = UserInfo.getUserinfo();
                     if (btn.getCurrentTextColor() == getResources().getColor(R.color.black)) {
@@ -54,14 +55,14 @@ public class EditCategoriesActivity extends AppCompatActivity {
                             Toast.makeText(EditCategoriesActivity.this, "不能在未登录状态修改列表！请先登录", Toast.LENGTH_SHORT).show();
                         } else {
                             btn.setTextColor(getResources().getColor(R.color.grey));
-                            userInfo.categories.remove(catName);
+                            // userInfo.categories.remove(catName);
                         }
                     } else {
                         if (userInfo == null) {
                             Toast.makeText(EditCategoriesActivity.this, "不能在未登录状态修改列表！请先登录", Toast.LENGTH_SHORT).show();
                         } else {
                             btn.setTextColor(getResources().getColor(R.color.black));
-                            userInfo.categories.add(catName);
+                            // userInfo.categories.add(catName);
                         }
                     }
 

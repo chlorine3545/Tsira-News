@@ -16,6 +16,9 @@
         android:theme="@style/Theme.TsiraNews"
         tools:targetApi="31">
         <activity
+            android:name=".AccountActivity"
+            android:exported="false" />
+        <activity
             android:name=".AboutActivity"
             android:exported="false" />
         <activity
