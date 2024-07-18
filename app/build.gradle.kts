@@ -61,10 +61,14 @@ dependencies {
     implementation(libs.jackson.annotations)
     implementation(libs.commons.codec)
     implementation(libs.glide.v4120)
-    implementation(libs.oapi.java.sdk)
-    testImplementation(platform(libs.junit.bom))
-    testImplementation(libs.junit.jupiter)
+    // implementation(libs.oapi.java.sdk)
+    // testImplementation(platform(libs.junit.bom))
+    // testImplementation(libs.junit.jupiter)
     annotationProcessor(libs.compiler)
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("cn.bigmodel.openapi:oapi-java-sdk:release-V4-2.0.2")
+    implementation(kotlin("script-runtime", "1.4.32")) // Replace "1.4.32" with the version you need
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }

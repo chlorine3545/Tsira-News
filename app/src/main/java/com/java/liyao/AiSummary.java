@@ -1,50 +1,59 @@
 package com.java.liyao;
 
-import android.annotation.SuppressLint;
+import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zhipu.oapi.ClientV4;
-import com.zhipu.oapi.Constants;
-import com.zhipu.oapi.service.v4.model.ChatCompletionRequest;
-import com.zhipu.oapi.service.v4.model.ChatMessage;
-import com.zhipu.oapi.service.v4.model.ChatMessageRole;
-import com.zhipu.oapi.service.v4.model.ModelApiResponse;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
+import okhttp3.*;
+import java.io.IOException;
+
 
 public class AiSummary {
     private static final String API_KEY = "700e022f1d2f8f8d4c29b675e09d6a82.NZX85Lct83ikjRL2";
-    private static final String BASIC_PROMPT = "Please summarize the main content of the following news in concise and accurate English. Ignore any irrelevant words and provide the summary directly without any additional information.\n";
-    private static final ClientV4 CLIENT = new ClientV4.Builder(API_KEY).build();
+    private static final String BASIC_PROMPT = "Please summarize the main content of the following news in concise and accurate simplified Chinese. Ignore any irrelevant words and provide the summary directly without any additional information.\n";
+    // private static final ClientV4 CLIENT = new ClientV4.Builder(API_KEY).build();
     private static final String requestIdTemplate = "thu-%d";
 
     public static String aiSummaryInvoke(String content) {
-        List<ChatMessage> messages = new ArrayList<>();
+        // List<ChatMessage> messages = new ArrayList<>();
         final String finalPrompt = BASIC_PROMPT + content;
-        ChatMessage chatMessage = new ChatMessage(ChatMessageRole.USER.value(), finalPrompt);
-        messages.add(chatMessage);
-        @SuppressLint("DefaultLocale") String requestId = String.format(requestIdTemplate, System.currentTimeMillis());
+        OkHttpClient client = new OkHttpClient();
 
-        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
-                .model(Constants.ModelChatGLM4)
-                .stream(Boolean.FALSE)
-                .invokeMethod(Constants.invokeMethod)
-                .messages(messages)
-                .requestId(requestId)
+        MediaType mediaType = MediaType.parse("application/json");
+
+        String json_content = "{\n" +
+                "    \"model\": \"glm-4\",\n" +
+                "    \"messages\": [\n" +
+                "        {\n" +
+                "            \"role\": \"user\",\n" +
+                "            \"content\": \"" + finalPrompt + "\"\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+
+        json_content = json_content.replace("\n", "").replace("\t", "").replace("\r", "");
+        RequestBody body = RequestBody.create(mediaType, json_content);
+
+        Log.d("AiSummary", "aiSummaryInvoke: " + json_content);
+
+        Request request = new Request.Builder()
+                .url("https://open.bigmodel.cn/api/paas/v4/chat/completions")
+                .post(body)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Content-Type", "application/json")
                 .build();
 
-        ModelApiResponse invokeModelApiResp = CLIENT.invokeModelApi(chatCompletionRequest); // 修正后的代码
-
-        String ret = "";
-
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            ret = mapper.writeValueAsString(invokeModelApiResp);
-        } catch (JsonProcessingException e) {
+            Response response = client.newCall(request).execute();
+            String s = response.body().string();
+            AiSummaryRetInfo.ChoicesDTO.MessageDTO messageDTO = new Gson().fromJson(s, AiSummaryRetInfo.class).getChoices().get(0).getMessage();
+            s = messageDTO.getContent();
+//            Log.d("AiSummary",  s);
+            return s;
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        String ret = "failed to get ai summary";
         return ret;
     }
 }
