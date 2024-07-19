@@ -1,6 +1,7 @@
 package com.java.liyao;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -49,6 +50,10 @@ public class CatTabFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private HashSet<String> alreadyViewed;
     private HashSet<String> alreadyLiked;
+
+    private static final String PREF_NAME = "NewsCache";
+    private static final long CACHE_EXPIRATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+    private SharedPreferences sharedPreferences;
 
     private boolean isLoading = false;
     private int currentPage = 1;

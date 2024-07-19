@@ -37,17 +37,14 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void setFadeInAnimation(View view) {
-        // 初始状态为不可见
         view.setVisibility(View.INVISIBLE);
 
-        // 创建AlphaAnimation
-        AlphaAnimation fadeInAnimation = new AlphaAnimation(0, 1); // 从完全透明到完全不透明
-        fadeInAnimation.setDuration(1000); // 设置动画持续时间
+        AlphaAnimation fadeInAnimation = new AlphaAnimation(0, 1);
+        fadeInAnimation.setDuration(1000);
 
         // 开始动画
         view.startAnimation(fadeInAnimation);
 
-        // 动画结束后设置为可见
         fadeInAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
