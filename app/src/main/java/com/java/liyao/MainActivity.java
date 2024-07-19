@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPg2;
 
     private Toolbar main_toolbar;
+    private TextView search;
     private NavigationView nav_view;
     private TextView tv_nickname;
     private TextView tv_user_email;
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         catTab = findViewById(R.id.catTab);
         nav_view = findViewById(R.id.nav_view);
         main_toolbar = findViewById(R.id.main_toolbar);
+        // 主打一个严谨
+        search = main_toolbar.findViewById(R.id.search_layout).findViewById(R.id.search_box);
         View headerView = nav_view.getHeaderView(0);
         tv_nickname = headerView.findViewById(R.id.tv_nickname);
         tv_user_email = headerView.findViewById(R.id.tv_user_email);
@@ -142,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         tabLayoutMediator.attach();
+
+        // 搜索框输入事件。要不还是不做搜索框，直接点击跳转到搜索页面吧。
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

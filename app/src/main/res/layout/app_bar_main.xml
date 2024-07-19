@@ -17,17 +17,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:id="@+id/search_layout"
             android:layout_height="40dp">
 
-            <EditText
+            <TextView
                 android:layout_toStartOf="@id/search_button"
-                android:id="@+id/search"
+                android:id="@+id/search_box"
                 android:layout_width="281dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/text_view_border"
                 android:gravity="center_vertical"
                 android:hint="@string/search_placeholder"
-                android:inputType="text"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp" />
 

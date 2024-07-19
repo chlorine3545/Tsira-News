@@ -15,7 +15,6 @@
         android:background="@android:color/transparent"
         android:navigationIcon="@drawable/comeback"
         android:title="@string/history_title">
-
     </Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
