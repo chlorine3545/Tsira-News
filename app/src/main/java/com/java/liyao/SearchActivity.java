@@ -1,6 +1,8 @@
 package com.java.liyao;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -71,9 +73,17 @@ public class SearchActivity extends AppCompatActivity {
             Toast.makeText(this, "搜索关键词: " + keyword + ", 开始日期: " + startDate + ", 结束日期: " + endDate + ", 类别: " + category, Toast.LENGTH_LONG).show();
             // 快要写搜索结果活动了，仿造一下首页列表就可以了。
             // TODO
+            Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+            intent.putExtra("KEYWORD", keyword);
+            intent.putExtra("START_DATE", startDate);
+            intent.putExtra("END_DATE", endDate);
+            intent.putExtra("CATEGORY", category);
+            startActivity(intent);
+            // 先注释下，测试一下能不能传入正确格式再开活动
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateDateButtonText() {
         start_date_button.setText(getString(R.string.start_date) + ": 请选择日期");
         end_date_button.setText(getString(R.string.end_date) + ": 请选择日期");
