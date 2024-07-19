@@ -4,21 +4,10 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.TextView;
-
-import androidx.appcompat.widget.Toolbar;
-
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -35,9 +24,6 @@ public class SearchActivity extends AppCompatActivity {
 
     private static final List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
 
-    private TextView startDateTextView;
-    private TextView endDateTextView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +37,12 @@ public class SearchActivity extends AppCompatActivity {
         end_date_button = findViewById(R.id.end_date_button);
         search_cat = findViewById(R.id.search_cat);
         search_button = findViewById(R.id.search_button);
-        startDateTextView = new TextView(this);
-        endDateTextView = new TextView(this);
 
         // 设置 Toolbar
         search_toolbar.setNavigationOnClickListener(v -> finish());
+
+        // 初始化日期按钮文本
+        updateDateButtonText();
 
         // 关键词
         search_keyword.setOnFocusChangeListener((v, hasFocus) -> {
@@ -82,10 +69,17 @@ public class SearchActivity extends AppCompatActivity {
 
             // 执行搜索逻辑
             Toast.makeText(this, "搜索关键词: " + keyword + ", 开始日期: " + startDate + ", 结束日期: " + endDate + ", 类别: " + category, Toast.LENGTH_LONG).show();
+            // 快要写搜索结果活动了，仿造一下首页列表就可以了。
+            // TODO
         });
     }
 
-    private void showDatePickerDialog(boolean isStart) {
+    private void updateDateButtonText() {
+        start_date_button.setText(getString(R.string.start_date) + ": 请选择日期");
+        end_date_button.setText(getString(R.string.end_date) + ": 请选择日期");
+    }
+
+    private void showDatePickerDialog(final boolean isStart) {
         Calendar calendar = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             Calendar selectedDate = Calendar.getInstance();
@@ -99,6 +93,13 @@ public class SearchActivity extends AppCompatActivity {
             } else {
                 end_date_button.setText(getString(R.string.end_date) + ": " + date);
             }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)) {
+            // @Override
+            public void onDateChanged() {
+                // 可以在这里显示一个确定按钮
+                this.getButton(DatePickerDialog.BUTTON_POSITIVE).setText("确定");
+                this.getButton(DatePickerDialog.BUTTON_NEGATIVE).setText("取消");
+            }
+        }.show();
     }
 }

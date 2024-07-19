@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView nav_view;
     private TextView tv_nickname;
     private TextView tv_user_email;
+    private ImageButton search_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         View headerView = nav_view.getHeaderView(0);
         tv_nickname = headerView.findViewById(R.id.tv_nickname);
         tv_user_email = headerView.findViewById(R.id.tv_user_email);
+        search_icon = main_toolbar.findViewById(R.id.search_icon);
 
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -153,6 +157,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(intent);
+            }
+        });
+        
+        // 搞个怪
+        search_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "前面的区域，以后再来探索吧！", Toast.LENGTH_SHORT).show();
             }
         });
     }
