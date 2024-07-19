@@ -178,8 +178,9 @@ public class CatTabFragment extends Fragment {
     }
 
     private void fetcher() throws UnsupportedEncodingException {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2023-01-01&endDate=2024-08-30&words=&categories=";
+        OkHttpClient okHttpClient = OkHttpSingleton.getInstance(); // Use the singleton instance
+        // 《新闻》（指四年前）
+        String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2020-07-01&endDate=2024-08-30&words=&categories=";
         String encodedCatT = Objects.equals(catT, "全部") ? "" : URLEncoder.encode(catT, StandardCharsets.UTF_8.toString());
         String url = baseUrl + encodedCatT + "&page=" + currentPage;
         Request request = new Request.Builder()
@@ -193,7 +194,7 @@ public class CatTabFragment extends Fragment {
                 Log.d("NetworkError", "onFailure: " + e.toString());
                 mHandler.post(() -> {
                     isLoading = false;
-                    // 可以在这里添加一个Toast提示用户加载失败
+                    // Optionally, notify the user of a network error here
                 });
             }
 
@@ -201,10 +202,15 @@ public class CatTabFragment extends Fragment {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful() && response.body() != null) {
                     String data = response.body().string();
-                    Message message = Message.obtain();
-                    message.what = 200;
-                    message.obj = data;
-                    mHandler.sendMessage(message);
+                    NewsInfo newsInfo = new Gson().fromJson(data, NewsInfo.class);
+                    if (newsInfo.getData().isEmpty()) {
+                        mHandler.post(() -> Toast.makeText(getActivity(), "我们可能需要到更加古老的年代爬取新闻……", Toast.LENGTH_LONG).show());
+                    } else {
+                        Message message = Message.obtain();
+                        message.what = 200;
+                        message.obj = data;
+                        mHandler.sendMessage(message);
+                    }
                 } else {
                     Log.d("NetworkError", "Response not successful or body is null");
                     mHandler.post(() -> isLoading = false);
