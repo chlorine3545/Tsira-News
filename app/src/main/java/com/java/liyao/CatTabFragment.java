@@ -69,10 +69,12 @@ public class CatTabFragment extends Fragment {
                         } else {
                             newsListAdapter.addListData(newsInfo.getData());
                         }
+                        newsListAdapter.notifyDataSetChanged();
                     } else {
                         Toast.makeText(getActivity(), "获取数据失败！", Toast.LENGTH_SHORT).show();
                     }
                 }
+                isLoading = false;
             }
         };
     }
@@ -123,7 +125,8 @@ public class CatTabFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                currentPage = 1; // 为什么要重置 currentPage？
+                currentPage = 1;
+                newsListAdapter.clearData(); // 假设你在 adapter 中添加了一个 clearData 方法
                 try {
                     fetcher();
                 } catch (UnsupportedEncodingException e) {
@@ -153,8 +156,9 @@ public class CatTabFragment extends Fragment {
                 int totalItemCount = layoutManager.getItemCount();
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
 
-                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                        && firstVisibleItemPosition >= 0) {
+                // 当距离底部还有5个项目时就开始加载
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 5
+                        && firstVisibleItemPosition >= 0 && dy > 0) {
                     loadMoreItems();
                 }
             }
@@ -162,12 +166,14 @@ public class CatTabFragment extends Fragment {
     }
 
     private void loadMoreItems() {
+        if (isLoading) return;
         isLoading = true;
         currentPage++;
         try {
             fetcher();
         } catch (UnsupportedEncodingException e) {
             Log.e("EncodingError", "Unsupported Encoding Exception", e);
+            isLoading = false;
         }
     }
 
@@ -185,7 +191,10 @@ public class CatTabFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.d("NetworkError", "onFailure: " + e.toString());
-                isLoading = false;
+                mHandler.post(() -> {
+                    isLoading = false;
+                    // 可以在这里添加一个Toast提示用户加载失败
+                });
             }
 
             @Override
@@ -198,8 +207,8 @@ public class CatTabFragment extends Fragment {
                     mHandler.sendMessage(message);
                 } else {
                     Log.d("NetworkError", "Response not successful or body is null");
+                    mHandler.post(() -> isLoading = false);
                 }
-                isLoading = false;
             }
         });
     }

@@ -140,4 +140,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
         this.mDataDTOList.addAll(newData);
         notifyItemRangeInserted(startPosition, newData.size());
     }
+
+    public void clearData() {
+        this.mDataDTOList.clear();
+        notifyDataSetChanged();
+    }
 }

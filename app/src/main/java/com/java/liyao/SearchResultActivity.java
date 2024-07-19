@@ -164,7 +164,7 @@ public class SearchResultActivity extends AppCompatActivity {
         String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15";
 
         // 由于模拟器不能输入中文，先把关键词写死测试一下搜索功能能不能用
-        String encodedKeyword = URLEncoder.encode("拜登", StandardCharsets.UTF_8.toString());
+        String encodedKeyword = URLEncoder.encode(keyword, StandardCharsets.UTF_8.toString());
         String encodedCat = cat.equals("全部") ? "" : URLEncoder.encode(cat, StandardCharsets.UTF_8.toString());
 
         String url = baseUrl +
