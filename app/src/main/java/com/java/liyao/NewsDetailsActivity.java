@@ -23,6 +23,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.java.liyao.db.AiSummaryDbHelper;
 import com.java.liyao.db.HistoryDbHelper;
 import com.java.liyao.db.LikeDbHelper;
 import com.java.liyao.entity.UserInfo;
@@ -54,6 +55,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         runOnUiThread(() -> {
             ai_summary.setText(s);
             dataDTO.setAiSummary(s);
+            AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).addSummary(dataDTO.getUniqueID(), s);
         });
     }
 
@@ -118,7 +120,9 @@ public class NewsDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 摘要的逻辑比较复杂，暂时不写
-                if (Objects.equals(dataDTO.getAiSummary(), "")) {
+                String uk = dataDTO.getUniqueID();
+                boolean isSummarized = AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).searchSummary(uk);
+                if (!isSummarized) {
                     ai_summary.setText("AI摘要生成中...");
                     // 这里需要调用接口生成摘要，先放这里搁着
                     // 开造！（慈禧音）
@@ -129,7 +133,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
                         setAi_summary_DTO(aiSummary);
                     }).start();
                 } else {
-                    ai_summary.setText(dataDTO.getAiSummary());
+                    ai_summary.setText(AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).getSummary(uk).getAiSummary());
                 }
             }
         });
