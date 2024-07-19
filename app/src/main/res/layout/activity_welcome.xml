@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WelcomeActivity">
+
+    <TextView
+        android:id="@+id/welcome_countdown"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:text="3s"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:textSize="16sp">
+    </TextView>
+
+    <ImageView
+        android:id="@+id/welcome_logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/logo"
+        android:visibility="invisible">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="蓬山此去无多路，青鸟殷勤为探看\n——【唐】李商隐"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14dp"
+        android:layout_marginTop="60dp"
+        android:layout_below="@id/welcome_logo"
+        android:visibility="invisible">
+
+    </TextView>
+
+</RelativeLayout>
