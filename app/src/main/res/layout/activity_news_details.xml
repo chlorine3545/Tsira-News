@@ -43,38 +43,122 @@
                 android:textSize="14sp" />
         </RelativeLayout>
 
+        <!--    TODO：来吧，我们写一个相关信息部分    -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/ai_summary_card"
+            android:id="@+id/info_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp">
+            android:layout_margin="10dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/ai_summary_title"
-                    android:textSize="20sp"
-                    android:textStyle="bold">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
 
-                </TextView>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/baseline_calendar_today_24" />
 
-                <TextView
-                    android:id="@+id/ai_summary"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/card_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="时间：1145–1–41 91:98:00"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/darker_gray" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/ai_summary_placeholder">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
 
-                </TextView>
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/baseline_source_24" />
+
+                    <TextView
+                        android:id="@+id/card_source"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="来源：华清大学新闻办公室"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/darker_gray" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/robot" />
+
+                    <TextView
+                        android:id="@+id/ai_summary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="摘要：点击生成AI摘要"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/darker_gray" />
+
+                </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:id="@+id/ai_summary_card"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="10dp">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:text="@string/ai_summary_title"-->
+<!--                    android:textSize="20sp"-->
+<!--                    android:textStyle="bold">-->
+
+<!--                </TextView>-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/ai_summary"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:text="@string/ai_summary_placeholder">-->
+
+<!--                </TextView>-->
+
+<!--            </LinearLayout>-->
+<!--        </androidx.cardview.widget.CardView>-->
 
         <TextView
             android:id="@+id/details_content"
@@ -98,15 +182,6 @@
             android:id="@+id/details_btm_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/details_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="50dp">
-
-            </TextView>
 
             <ImageButton
                 android:id="@+id/like_btn"

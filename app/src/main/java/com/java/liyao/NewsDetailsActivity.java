@@ -21,18 +21,19 @@ import com.java.liyao.entity.UserInfo;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class NewsDetailsActivity extends AppCompatActivity {
     private NewsInfo.DataDTO dataDTO;
     private Toolbar details_toolbar;
     private ViewPager2 details_image;
-    private TextView ai_summary;
+    // private TextView ai_summary;
     private TextView details_content;
-    private TextView details_time;
     private ImageButton like_btn;
     private ImagePagerAdapter imagePagerAdapter;
     private TextView image_indicator;
+    private TextView card_date;
+    private TextView card_source;
+    private TextView ai_summary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,26 +43,26 @@ public class NewsDetailsActivity extends AppCompatActivity {
         // 初始化控件
         details_toolbar = findViewById(R.id.details_toolbar);
         details_image = findViewById(R.id.details_image);
-        ai_summary = findViewById(R.id.ai_summary_card).findViewById(R.id.ai_summary);
+        ai_summary = findViewById(R.id.ai_summary);
         details_content = findViewById(R.id.details_content);
         RelativeLayout rly = findViewById(R.id.details_btm_bar);
         like_btn = rly.findViewById(R.id.like_btn);
-        details_time = rly.findViewById(R.id.details_time);
         image_indicator = findViewById(R.id.image_indicator);
+        card_date = findViewById(R.id.card_date);
+        card_source = findViewById(R.id.card_source);
 
         // 获取数据
         dataDTO = (NewsInfo.DataDTO) getIntent().getSerializableExtra("dataDTO");
         assert dataDTO != null; // 判空
         details_toolbar.setTitle(dataDTO.getTitle());
-
+        card_date.setText("时间" + dataDTO.getPublishTime());
+        card_source.setText("来源" + dataDTO.getPublisher());
         details_content.setText(dataDTO.getContent());
 
         // 初始化ViewPager2
         String videoUrl = null;
         List<String> imageUrls = dataDTO.getImage();
-        if (!Objects.equals(dataDTO.getVideo(), "")) {
-            videoUrl = dataDTO.getVideo(); // 获取视频 URL
-        }
+        videoUrl = "http://vjs.zencdn.net/v/oceans.mp4";
 
         Log.d("ImageLoader", "onCreate: " + dataDTO.getTitle() + imageUrls.toString());
         if ((imageUrls != null && !imageUrls.isEmpty()) || (videoUrl != null && !videoUrl.isEmpty())) {
@@ -114,18 +115,16 @@ public class NewsDetailsActivity extends AppCompatActivity {
                 String uk = dataDTO.getUniqueID();
                 boolean isSummarized = AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).searchSummary(uk);
                 if (!isSummarized) {
-                    ai_summary.setText("AI摘要生成中...");
+                    ai_summary.setText("摘要：AI摘要生成中...");
                     new Thread(() -> {
                         String aiSummary = AiSummary.aiSummaryInvoke(dataDTO.getContent());
                         setAi_summary_DTO(aiSummary);
                     }).start();
                 } else {
-                    ai_summary.setText(AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).getSummary(uk).getAiSummary());
+                    ai_summary.setText("摘要：" + AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).getSummary(uk).getAiSummary());
                 }
             }
         });
-
-        details_time.setText(dataDTO.getPublishTime());
 
         details_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +153,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
 
     private void setAi_summary_DTO(String s) {
         runOnUiThread(() -> {
-            ai_summary.setText(s);
+            ai_summary.setText("摘要：" + s);
             dataDTO.setAiSummary(s);
             AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).addSummary(dataDTO.getUniqueID(), s);
         });
