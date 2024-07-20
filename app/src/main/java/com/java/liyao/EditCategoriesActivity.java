@@ -77,7 +77,7 @@ public class EditCategoriesActivity extends AppCompatActivity {
         String eml = userInfo != null ? userInfo.getUser_email() : "null";
         List<String> tmpCatList = CatPrefDbHelper.getInstance(this).getCatPrefList(eml);
 
-        Log.d("UserCatPreference", "onCreate: " + tmpCatList.toString());
+        // Log.d("UserCatPreference", "onCreate: " + tmpCatList.toString());
 
         for (Button btn : category_btns) {
             String catName = btn.getText().toString();
@@ -107,7 +107,7 @@ public class EditCategoriesActivity extends AppCompatActivity {
                         addAndSort(tmpCatList, catName);
                         CatPrefDbHelper.getInstance(EditCategoriesActivity.this).updateCatPref(eml, tmpCatList);
                     }
-                    Log.d("CurrentCatPref", "onClick: " + eml + tmpCatList.toString());
+                    // Log.d("CurrentCatPref", "onClick: " + eml + tmpCatList.toString());
                 }
             });
         }

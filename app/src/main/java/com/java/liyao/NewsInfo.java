@@ -78,6 +78,10 @@ public class NewsInfo {
         @com.fasterxml.jackson.annotation.JsonProperty("who")
         private List<WhoDTO> who;
 
+        public String getVideo() {
+            return video;
+        }
+
         public String getUniqueID() {
             return uniqueID;
         }
@@ -126,7 +130,7 @@ public class NewsInfo {
             }
 
             // 去除字符串两端的大括号和方括号
-            String trimmedImage = image.replaceAll("^[\\[\\{]|\\u003d[\\]\\}]\\s*$", "");
+            String trimmedImage = image.replaceAll("^[\\[\\{]|[\\]\\}]$", "");
 
             // 使用正则表达式匹配URL，考虑到URL可能包含逗号，我们使用非贪婪匹配
             List<String> imageList = new ArrayList<>();
@@ -139,6 +143,7 @@ public class NewsInfo {
 
             return imageList;
         }
+
 
         public List<KeywordsDTO> getKeywords() {
             return keywords;

@@ -1,5 +1,6 @@
 package com.java.liyao;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,15 +9,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.gson.Gson;
 import com.java.liyao.db.AiSummaryDbHelper;
 import com.java.liyao.db.HistoryDbHelper;
 import com.java.liyao.db.LikeDbHelper;
 import com.java.liyao.entity.UserInfo;
+
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class NewsDetailsActivity extends AppCompatActivity {
     private NewsInfo.DataDTO dataDTO;
@@ -34,7 +39,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_details);
 
-        // 每日初始化控件
+        // 初始化控件
         details_toolbar = findViewById(R.id.details_toolbar);
         details_image = findViewById(R.id.details_image);
         ai_summary = findViewById(R.id.ai_summary_card).findViewById(R.id.ai_summary);
@@ -44,36 +49,43 @@ public class NewsDetailsActivity extends AppCompatActivity {
         details_time = rly.findViewById(R.id.details_time);
         image_indicator = findViewById(R.id.image_indicator);
 
-        // 啊哈哈哈，数据来咯！
+        // 获取数据
         dataDTO = (NewsInfo.DataDTO) getIntent().getSerializableExtra("dataDTO");
-        assert dataDTO != null; // 日常判空
+        assert dataDTO != null; // 判空
         details_toolbar.setTitle(dataDTO.getTitle());
 
         details_content.setText(dataDTO.getContent());
 
-        // Log.d("ImageLoader", "onCreate: " + dataDTO.getImage().toString());
-
         // 初始化ViewPager2
+        String videoUrl = null;
         List<String> imageUrls = dataDTO.getImage();
+        if (!Objects.equals(dataDTO.getVideo(), "")) {
+            videoUrl = dataDTO.getVideo(); // 获取视频 URL
+        }
+
         Log.d("ImageLoader", "onCreate: " + dataDTO.getTitle() + imageUrls.toString());
-        if (imageUrls != null && !imageUrls.isEmpty()) {
-            imagePagerAdapter = new ImagePagerAdapter(this, imageUrls);
+        if ((imageUrls != null && !imageUrls.isEmpty()) || (videoUrl != null && !videoUrl.isEmpty())) {
+            imagePagerAdapter = new ImagePagerAdapter(this, imageUrls, videoUrl);
             details_image.setAdapter(imagePagerAdapter);
             details_image.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
             // 设置指示器
-            updateIndicator(1, imageUrls.size());
+            updateIndicator(1, imagePagerAdapter.getItemCount());
 
             // 注册页面变化回调
             details_image.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageSelected(int position) {
                     super.onPageSelected(position);
-                    updateIndicator(position + 1, imageUrls.size());
+                    updateIndicator(position + 1, imagePagerAdapter.getItemCount());
                 }
             });
 
             image_indicator.setVisibility(View.VISIBLE);
+        } else if (videoUrl != null && !videoUrl.isEmpty()) {
+            // 如果有视频，可以隐藏ViewPager2
+            details_image.setVisibility(View.GONE);
+            image_indicator.setVisibility(View.GONE);
         } else {
             // 如果没有图片，可以隐藏ViewPager2
             details_image.setVisibility(View.GONE);
@@ -103,10 +115,8 @@ public class NewsDetailsActivity extends AppCompatActivity {
                 boolean isSummarized = AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).searchSummary(uk);
                 if (!isSummarized) {
                     ai_summary.setText("AI摘要生成中...");
-                    // Log.d("AI_SUMMARY", dataDTO.getContent());
                     new Thread(() -> {
                         String aiSummary = AiSummary.aiSummaryInvoke(dataDTO.getContent());
-                        // Log.d("AI_SUMMARY_RESULT", aiSummary);
                         setAi_summary_DTO(aiSummary);
                     }).start();
                 } else {
@@ -132,7 +142,6 @@ public class NewsDetailsActivity extends AppCompatActivity {
                     like_btn.setImageResource(R.drawable.like);
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).deleteLike(dataDTO.getUniqueID(), eml);
                     Toast.makeText(NewsDetailsActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
-                    Log.d("UnlikedSuccessfully", "onClick: 已经取消收藏");
                 } else {
                     like_btn.setImageResource(R.drawable.liked);
                     like_btn.setTooltipText("取消收藏");
@@ -155,7 +164,6 @@ public class NewsDetailsActivity extends AppCompatActivity {
         image_indicator.setText(String.format(Locale.getDefault(), "%d/%d", current, total));
     }
 
-    // OnDestroy
     @Override
     protected void onDestroy() {
         super.onDestroy();
