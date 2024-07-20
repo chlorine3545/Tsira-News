@@ -10,13 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.java.liyao.db.UserDbHelper;
 import com.java.liyao.entity.UserInfo;
 
 import java.util.Objects;
@@ -24,10 +21,9 @@ import java.util.Objects;
 public class AccountActivity extends AppCompatActivity {
 
     private Toolbar account_toolbar;
-    private TextView account_email_text;
     // private TextView account_password_text;
-    private Button account_change_email;
     private Button account_change_password;
+    private TextView account_email_text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,51 +32,15 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         account_toolbar = findViewById(R.id.account_toolbar);
-        account_email_text = findViewById(R.id.account_email).findViewById(R.id.account_email_text);
+        account_email_text = findViewById(R.id.account_email_text);
         // account_password_text = findViewById(R.id.account_password).findViewById(R.id.account_password_text);
-        account_change_email = findViewById(R.id.account_change_email);
         account_change_password = findViewById(R.id.account_change_password);
 
         UserInfo userInfo = UserInfo.getUserinfo();
-        // 由于在主活动中已经判断过 userInfo 是否为空，所以这里不再判断。
         account_email_text.setText(userInfo.getUser_email());
-        // account_password_text.setText(userInfo.getPassword());
 
         account_toolbar.setNavigationOnClickListener(v -> {
             finish();
-        });
-
-        account_change_email.setOnClickListener(v -> {
-            // 跳转到修改邮箱的活动
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.dialog_change_email, null);
-            builder.setView(dialogView);
-
-            EditText changeEmailEtrEmail = dialogView.findViewById(R.id.changeEmailLlEmail).findViewById(R.id.changeEmailEtrEmail);
-            EditText changeEmailEtrPassword = dialogView.findViewById(R.id.changeEmailLlPassword).findViewById(R.id.changeEmailEtrPassword);
-            Button changeEmailBtnChange = dialogView.findViewById(R.id.changeEmailBtnChange);
-
-            AlertDialog dialog = builder.create();
-
-            changeEmailBtnChange.setOnClickListener(v1 -> {
-                // 修改邮箱
-                String email = changeEmailEtrEmail.getText().toString();
-                String password = changeEmailEtrPassword.getText().toString();
-                UserInfo userInfo1 = UserInfo.getUserinfo();
-                if (Objects.equals(userInfo1.getPassword(), password)) {
-                    userInfo1.setUser_email(email);
-                    Toast.makeText(this, "邮箱修改成功！请重新登录", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    // 跳转到登录活动
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    startActivity(intent);
-                } else {
-                    // 修改失败
-                    Toast.makeText(this, "密码错误！", Toast.LENGTH_SHORT).show();
-                }
-                dialog.dismiss();
-            });
         });
 
         account_change_password.setOnClickListener(v -> {
@@ -102,10 +62,12 @@ public class AccountActivity extends AppCompatActivity {
                 String oldPassword = changePasswordEtrOld.getText().toString();
                 String newPassword = changePasswordEtrNew.getText().toString();
                 String newPasswordAgain = changePasswordEtrNewAgain.getText().toString();
-                UserInfo userInfo1 = UserInfo.getUserinfo();
-                if (Objects.equals(userInfo1.getPassword(), oldPassword)) {
+                String eml = userInfo.getUser_email();
+                if (Objects.equals(userInfo.getPassword(), oldPassword)) {
                     if (Objects.equals(newPassword, newPasswordAgain)) {
-                        userInfo1.setPassword(newPassword);
+                        userInfo.setPassword(newPassword);
+                        // 修改数据库
+                        UserDbHelper.getInstance(this).changePassword(eml, newPassword);
                         Toast.makeText(this, "密码修改成功！请重新登录", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         // 跳转到登录活动
@@ -121,6 +83,8 @@ public class AccountActivity extends AppCompatActivity {
                 }
                 dialog.dismiss();
             });
+
+            dialog.show();
         });
     }
 }

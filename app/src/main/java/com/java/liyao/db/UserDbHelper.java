@@ -86,4 +86,17 @@ public class UserDbHelper extends SQLiteOpenHelper {
         db.close();
         return userInfo;
     }
+
+    // 通过邮箱修改密码
+    public void changePassword(String email, String password) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("password", password);
+
+        String whereClause = "user_email=?";
+        String[] whereArgs = {email};
+
+        db.update("user_table", values, whereClause, whereArgs);
+        db.close();
+    }
 }
