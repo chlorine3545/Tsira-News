@@ -68,7 +68,9 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     implementation("cn.bigmodel.openapi:oapi-java-sdk:release-V4-2.0.2")
-    implementation(kotlin("script-runtime", "1.4.32")) // Replace "1.4.32" with the version you need
+    implementation(kotlin("script-runtime", "1.4.32"))
+    implementation(libs.core)
+    implementation("io.noties.markwon:ext-strikethrough:4.6.2")
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
