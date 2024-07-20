@@ -22,10 +22,10 @@
 
         </Toolbar>
 
-<!--        <androidx.viewpager2.widget.ViewPager2-->
-<!--            android:id="@+id/details_image"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="200dp" />-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/details_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/ai_summary_card"
@@ -60,22 +60,23 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-<!--        <TextView-->
-<!--            android:id="@+id/details_content"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="10dp"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="18sp">-->
-
-<!--        </TextView>-->
-
-        <WebView
-            android:id="@+id/details_webView"
+        <TextView
+            android:id="@+id/details_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent">
-        </WebView>
+            android:layout_margin="10dp"
+            android:textColor="@color/black"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp">
+
+        </TextView>
+
+<!--        <WebView-->
+<!--            android:id="@+id/details_webView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@android:color/transparent">-->
+<!--        </WebView>-->
 
         <RelativeLayout
             android:id="@+id/details_btm_bar"

@@ -1,0 +1,256 @@
+// 留个纪念吧，这个文件是我第一次写的，后来发现WebView不能用，就改用TextView了
+// 返工是世界上最邪恶的事情，没有之一
+
+package com.java.liyao;
+
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.text.Html;
+import android.Manifest;
+import android.util.Log;
+import android.view.View;
+import android.webkit.ValueCallback;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.gson.Gson;
+import com.java.liyao.db.AiSummaryDbHelper;
+import com.java.liyao.db.HistoryDbHelper;
+import com.java.liyao.db.LikeDbHelper;
+import com.java.liyao.NewsInfo;
+import com.java.liyao.entity.UserInfo;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class NewsDetailsActivity extends AppCompatActivity {
+
+    private NewsInfo.DataDTO dataDTO;
+    private Toolbar details_toolbar;
+    private TextView ai_summary;
+    private TextView details_time;
+    private ImageButton like_btn;
+    private WebView details_webView;
+    private static final String HTML_FOLDER = "news_html";
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
+    // 6，WebView不能用了，改用TextView返工吧
+
+    void setAi_summary_DTO(String s) {
+        runOnUiThread(() -> {
+            ai_summary.setText(s);
+            dataDTO.setAiSummary(s);
+            AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).addSummary(dataDTO.getUniqueID(), s);
+        });
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_news_details);
+
+        // 每日初始化控件
+        details_toolbar = findViewById(R.id.details_toolbar);
+        // details_image = findViewById(R.id.details_image);
+        ai_summary = findViewById(R.id.ai_summary_card).findViewById(R.id.ai_summary);
+        RelativeLayout rly = findViewById(R.id.details_btm_bar);
+        like_btn = rly.findViewById(R.id.like_btn);
+        details_time = rly.findViewById(R.id.details_time);
+        details_webView = findViewById(R.id.details_webView);
+
+        // 啊哈哈哈，数据来咯！
+        dataDTO = (NewsInfo.DataDTO) getIntent().getSerializableExtra("dataDTO");
+        details_webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+        });
+        details_webView.getSettings().setUseWideViewPort(true);
+        details_webView.getSettings().setLoadWithOverviewMode(true);
+        WebSettings webSettings = details_webView.getSettings();
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setSupportZoom(true);
+
+        assert dataDTO != null; // 日常判空
+        details_toolbar.setTitle(dataDTO.getTitle());
+        loadOfflineHtml();
+
+        // 添加到历史记录
+        String s = new Gson().toJson(dataDTO);
+        UserInfo userInfo = UserInfo.getUserinfo();
+        String eml = userInfo == null ? null : userInfo.getUser_email();
+        HistoryDbHelper.getInstance(NewsDetailsActivity.this).addHistory(eml, dataDTO.getUniqueID(), s, "");
+
+        boolean isLiked = LikeDbHelper.getInstance(NewsDetailsActivity.this).searchLike(dataDTO.getUniqueID(), eml);
+        if (isLiked) {
+            like_btn.setImageResource(R.drawable.liked);
+            like_btn.setTooltipText("取消收藏");
+        } else {
+            like_btn.setImageResource(R.drawable.like);
+            like_btn.setTooltipText("收藏");
+        }
+
+        // AI 摘要的逻辑比较复杂
+        ai_summary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String uk = dataDTO.getUniqueID();
+                boolean isSummarized = AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).searchSummary(uk);
+                if (!isSummarized) {
+                    ai_summary.setText("AI摘要生成中...");
+                    Log.d("AI_SUMMARY", dataDTO.getContent());
+                    new Thread(() -> {
+                        String aiSummary = AiSummary.aiSummaryInvoke(dataDTO.getContent());
+                        Log.d("AI_SUMMARY_RESULT", aiSummary);
+                        setAi_summary_DTO(aiSummary);
+                    }).start();
+                } else {
+                    ai_summary.setText(AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).getSummary(uk).getAiSummary());
+                }
+            }
+        });
+
+        details_time.setText(dataDTO.getPublishTime());
+
+        details_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        like_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isLiked) {
+                    like_btn.setTooltipText("收藏");
+                    like_btn.setImageResource(R.drawable.like);
+                    LikeDbHelper.getInstance(NewsDetailsActivity.this).deleteLike(dataDTO.getUniqueID(), eml);
+                    Toast.makeText(NewsDetailsActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
+                    Log.d("UnlikedSuccessfully", "onClick: 已经取消收藏");
+                } else {
+                    like_btn.setImageResource(R.drawable.liked);
+                    like_btn.setTooltipText("取消收藏");
+                    LikeDbHelper.getInstance(NewsDetailsActivity.this).addLike(eml, dataDTO.getUniqueID(), s);
+                    Toast.makeText(NewsDetailsActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        // 检查存储权限
+        if (checkPermission()) {
+            saveHtmlContent(details_webView);
+        } else {
+            requestPermission();
+        }
+    }
+
+    private boolean checkPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限被授予，保存HTML内容
+                saveHtmlContent(details_webView);
+            } else {
+                // 权限被拒绝，提示用户
+                Toast.makeText(this, "需要存储权限才能保存HTML内容", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void saveHtmlContent(WebView webView) {
+        webView.evaluateJavascript(
+                "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String html) {
+                        if (html != null) {
+                            String decodedHtml = Html.fromHtml(html.substring(1, html.length() - 1)).toString();
+                            saveHtmlToFile(decodedHtml);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void saveHtmlToFile(String htmlContent) {
+        try {
+            File dir = new File(getFilesDir(), HTML_FOLDER);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            File htmlFile = new File(dir, dataDTO.getUniqueID() + ".html");
+            FileWriter writer = new FileWriter(htmlFile);
+            writer.append(htmlContent);
+            writer.flush();
+            writer.close();
+            Log.d("HTML_SAVE", "HTML文件保存成功: " + htmlFile.getAbsolutePath());
+            HistoryDbHelper.getInstance(this).updateHtmlPath(dataDTO.getUniqueID(), htmlFile.getAbsolutePath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "保存HTML文件失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadOfflineHtml() {
+        String filePath = HistoryDbHelper.getInstance(this).getHtmlPath(dataDTO.getUniqueID());
+        if (filePath != null) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    StringBuilder content = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        content.append(line);
+                    }
+                    reader.close();
+                    Log.d("HTML_LOAD", "成功加载离线HTML文件");
+                    details_webView.loadDataWithBaseURL(null, content.toString(), "text/html", "UTF-8", null);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    details_webView.loadUrl(dataDTO.getUrl());
+                    Log.d("HTML_LOAD", "从网络加载页面: " + dataDTO.getUrl());
+                }
+            } else {
+                details_webView.loadUrl(dataDTO.getUrl());
+            }
+        } else {
+            details_webView.loadUrl(dataDTO.getUrl());
+        }
+    }
+}

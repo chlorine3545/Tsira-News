@@ -4,41 +4,18 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.java.liyao.db.AiSummaryDbHelper;
 import com.java.liyao.db.HistoryDbHelper;
 import com.java.liyao.db.LikeDbHelper;
 import com.java.liyao.entity.UserInfo;
-import com.zhipu.oapi.ClientV4;
-import com.zhipu.oapi.Constants;
-import com.zhipu.oapi.service.v4.model.ChatCompletionRequest;
-import com.zhipu.oapi.service.v4.model.ChatMessage;
-import com.zhipu.oapi.service.v4.model.ChatMessageRole;
-import com.zhipu.oapi.service.v4.model.ModelApiResponse;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class NewsDetailsActivity extends AppCompatActivity {
 
@@ -46,10 +23,10 @@ public class NewsDetailsActivity extends AppCompatActivity {
     private Toolbar details_toolbar;
     private ViewPager2 details_image;
     private TextView ai_summary;
-    // private TextView details_content;
+    private TextView details_content;
     private TextView details_time;
     private ImageButton like_btn;
-    private WebView details_webView;
+    // private WebView details_webView;
 
     void setAi_summary_DTO(String s) {
         runOnUiThread(() -> {
@@ -68,37 +45,39 @@ public class NewsDetailsActivity extends AppCompatActivity {
 
         // 每日初始化控件
         details_toolbar = findViewById(R.id.details_toolbar);
-        // details_image = findViewById(R.id.details_image);
+        details_image = findViewById(R.id.details_image);
         ai_summary = findViewById(R.id.ai_summary_card).findViewById(R.id.ai_summary);
-        // details_content = findViewById(R.id.details_content);
+        details_content = findViewById(R.id.details_content);
         RelativeLayout rly = findViewById(R.id.details_btm_bar);
         like_btn = rly.findViewById(R.id.like_btn);
         details_time = rly.findViewById(R.id.details_time);
-        details_webView = findViewById(R.id.details_webView);
+        // details_webView = findViewById(R.id.details_webView);
 
         // 啊哈哈哈，数据来咯！
         dataDTO = (NewsInfo.DataDTO) getIntent().getSerializableExtra("dataDTO");
-        details_webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return super.shouldOverrideUrlLoading(view, url);
-            }
-        });
-        details_webView.getSettings().setUseWideViewPort(true);
-        details_webView.getSettings().setLoadWithOverviewMode(true);
-        WebSettings webSettings = details_webView.getSettings();
-        webSettings.setUseWideViewPort(true);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setBuiltInZoomControls(true);
-        webSettings.setSupportZoom(true);
+//        details_webView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                view.loadUrl(url);
+//                return super.shouldOverrideUrlLoading(view, url);
+//            }
+//        });
+//        details_webView.getSettings().setUseWideViewPort(true);
+//        details_webView.getSettings().setLoadWithOverviewMode(true);
+//        WebSettings webSettings = details_webView.getSettings();
+//        webSettings.setUseWideViewPort(true);
+//        webSettings.setLoadWithOverviewMode(true);
+//        webSettings.setJavaScriptEnabled(true);
+//        webSettings.setDomStorageEnabled(true);
+//        webSettings.setBuiltInZoomControls(true);
+//        webSettings.setSupportZoom(true);
 
         assert dataDTO != null; // 日常判空
         details_toolbar.setTitle(dataDTO.getTitle());
         // Log.d("WEBVIEW", "onCreate: 即将加载页面");
-        details_webView.loadUrl(dataDTO.getUrl());
+        // details_webView.loadUrl(dataDTO.getUrl());
+
+        details_content.setText(dataDTO.getContent());
 
         // 添加到历史记录
         String s = new Gson().toJson(dataDTO);
