@@ -1,6 +1,5 @@
 package com.java.liyao;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,12 +9,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.gson.Gson;
 import com.java.liyao.db.AiSummaryDbHelper;
 import com.java.liyao.db.HistoryDbHelper;
 import com.java.liyao.db.LikeDbHelper;
+import com.java.liyao.NewsInfo;
 import com.java.liyao.entity.UserInfo;
+
+import java.util.List;
 
 public class NewsDetailsActivity extends AppCompatActivity {
 
@@ -26,21 +30,11 @@ public class NewsDetailsActivity extends AppCompatActivity {
     private TextView details_content;
     private TextView details_time;
     private ImageButton like_btn;
-    // private WebView details_webView;
+    private ImagePagerAdapter imagePagerAdapter;
 
-    void setAi_summary_DTO(String s) {
-        runOnUiThread(() -> {
-            ai_summary.setText(s);
-            dataDTO.setAiSummary(s);
-            AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).addSummary(dataDTO.getUniqueID(), s);
-        });
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // EdgeToEdge.enable(this);
         setContentView(R.layout.activity_news_details);
 
         // 每日初始化控件
@@ -51,33 +45,19 @@ public class NewsDetailsActivity extends AppCompatActivity {
         RelativeLayout rly = findViewById(R.id.details_btm_bar);
         like_btn = rly.findViewById(R.id.like_btn);
         details_time = rly.findViewById(R.id.details_time);
-        // details_webView = findViewById(R.id.details_webView);
 
         // 啊哈哈哈，数据来咯！
         dataDTO = (NewsInfo.DataDTO) getIntent().getSerializableExtra("dataDTO");
-//        details_webView.setWebViewClient(new WebViewClient() {
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                view.loadUrl(url);
-//                return super.shouldOverrideUrlLoading(view, url);
-//            }
-//        });
-//        details_webView.getSettings().setUseWideViewPort(true);
-//        details_webView.getSettings().setLoadWithOverviewMode(true);
-//        WebSettings webSettings = details_webView.getSettings();
-//        webSettings.setUseWideViewPort(true);
-//        webSettings.setLoadWithOverviewMode(true);
-//        webSettings.setJavaScriptEnabled(true);
-//        webSettings.setDomStorageEnabled(true);
-//        webSettings.setBuiltInZoomControls(true);
-//        webSettings.setSupportZoom(true);
-
         assert dataDTO != null; // 日常判空
         details_toolbar.setTitle(dataDTO.getTitle());
-        // Log.d("WEBVIEW", "onCreate: 即将加载页面");
-        // details_webView.loadUrl(dataDTO.getUrl());
 
         details_content.setText(dataDTO.getContent());
+
+        // 初始化ViewPager2
+        List<String> imageUrls = dataDTO.getImage();
+        imagePagerAdapter = new ImagePagerAdapter(this, imageUrls);
+        details_image.setAdapter(imagePagerAdapter);
+        details_image.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
         // 添加到历史记录
         String s = new Gson().toJson(dataDTO);
@@ -94,17 +74,14 @@ public class NewsDetailsActivity extends AppCompatActivity {
             like_btn.setTooltipText("收藏");
         }
 
-        // AI 摘要的逻辑比较复杂
+        // AI 摘要的逻辑
         ai_summary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 摘要的逻辑比较复杂，暂时不写
                 String uk = dataDTO.getUniqueID();
                 boolean isSummarized = AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).searchSummary(uk);
                 if (!isSummarized) {
                     ai_summary.setText("AI摘要生成中...");
-                    // 这里需要调用接口生成摘要，先放这里搁着
-                    // 开造！（慈禧音）
                     Log.d("AI_SUMMARY", dataDTO.getContent());
                     new Thread(() -> {
                         String aiSummary = AiSummary.aiSummaryInvoke(dataDTO.getContent());
@@ -117,9 +94,6 @@ public class NewsDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // 图片的逻辑也比较复杂，暂时不写
-
-        // details_content.setText(dataDTO.getContent());
         details_time.setText(dataDTO.getPublishTime());
 
         details_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -129,26 +103,30 @@ public class NewsDetailsActivity extends AppCompatActivity {
             }
         });
 
-        // 收藏按钮，心里有点没底 qaq
-        // 你过关！（超大声）
         like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isLiked) {
-                    // 把心形变白
                     like_btn.setTooltipText("收藏");
                     like_btn.setImageResource(R.drawable.like);
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).deleteLike(dataDTO.getUniqueID(), eml);
                     Toast.makeText(NewsDetailsActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
                     Log.d("UnlikedSuccessfully", "onClick: 已经取消收藏");
                 } else {
-                    // 把心形变红
                     like_btn.setImageResource(R.drawable.liked);
                     like_btn.setTooltipText("取消收藏");
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).addLike(eml, dataDTO.getUniqueID(), s);
                     Toast.makeText(NewsDetailsActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+    }
+
+    private void setAi_summary_DTO(String s) {
+        runOnUiThread(() -> {
+            ai_summary.setText(s);
+            dataDTO.setAiSummary(s);
+            AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).addSummary(dataDTO.getUniqueID(), s);
         });
     }
 }
