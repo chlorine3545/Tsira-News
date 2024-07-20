@@ -251,7 +251,6 @@ public class CatTabFragment extends Fragment {
                 Log.d("NetworkError", "onFailure: " + e.toString());
                 mHandler.post(() -> {
                     isLoading = false;
-                    // Optionally, notify the user of a network error here
                 });
             }
 

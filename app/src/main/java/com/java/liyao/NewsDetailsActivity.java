@@ -1,6 +1,6 @@
 package com.java.liyao;
 
-import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +35,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
     private TextView card_source;
     private TextView ai_summary;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,14 +56,16 @@ public class NewsDetailsActivity extends AppCompatActivity {
         dataDTO = (NewsInfo.DataDTO) getIntent().getSerializableExtra("dataDTO");
         assert dataDTO != null; // 判空
         details_toolbar.setTitle(dataDTO.getTitle());
-        card_date.setText("时间" + dataDTO.getPublishTime());
-        card_source.setText("来源" + dataDTO.getPublisher());
+        card_date.setText("时间：" + dataDTO.getPublishTime());
+        card_source.setText("来源：" + dataDTO.getPublisher());
         details_content.setText(dataDTO.getContent());
 
         // 初始化ViewPager2
         String videoUrl = null;
         List<String> imageUrls = dataDTO.getImage();
-        videoUrl = "http://vjs.zencdn.net/v/oceans.mp4";
+        if (dataDTO.getVideo() != null && !dataDTO.getVideo().isEmpty()) {
+            videoUrl = dataDTO.getVideo();
+        }
 
         Log.d("ImageLoader", "onCreate: " + dataDTO.getTitle() + imageUrls.toString());
         if ((imageUrls != null && !imageUrls.isEmpty()) || (videoUrl != null && !videoUrl.isEmpty())) {
