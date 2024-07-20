@@ -74,8 +74,8 @@ public class EditCategoriesActivity extends AppCompatActivity {
 
         // 获取用户的分类偏好，来设置按钮的颜色。
         UserInfo userInfo = UserInfo.getUserinfo();
-        String eml = userInfo != null ? userInfo.getUser_email() : null;
-        List<String> tmpCatList = eml != null ? CatPrefDbHelper.getInstance(this).getCatPrefList(eml) : new ArrayList<>(allCats);
+        String eml = userInfo != null ? userInfo.getUser_email() : "null";
+        List<String> tmpCatList = CatPrefDbHelper.getInstance(this).getCatPrefList(eml);
 
         Log.d("UserCatPreference", "onCreate: " + tmpCatList.toString());
 
@@ -101,11 +101,13 @@ public class EditCategoriesActivity extends AppCompatActivity {
                         btn.setTextColor(getResources().getColor(R.color.grey));
                         removeAndSort(tmpCatList, catName);
                         CatPrefDbHelper.getInstance(EditCategoriesActivity.this).updateCatPref(eml, tmpCatList);
+
                     } else {
                         btn.setTextColor(getResources().getColor(R.color.black));
                         addAndSort(tmpCatList, catName);
                         CatPrefDbHelper.getInstance(EditCategoriesActivity.this).updateCatPref(eml, tmpCatList);
                     }
+                    Log.d("CurrentCatPref", "onClick: " + eml + tmpCatList.toString());
                 }
             });
         }

@@ -5,6 +5,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -25,11 +26,16 @@ import com.java.liyao.db.CatPrefDbHelper;
 import com.java.liyao.entity.CatPrefInfo;
 import com.java.liyao.entity.UserInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
+    private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
     UserInfo userInfo = UserInfo.getUserinfo();
     private List<String> cats = allCats;
     // 得先获取用户的分类，如果没有登录，就用默认的分类。
@@ -51,8 +57,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // CatPrefDbHelper.getInstance(this).resetAllUserPreferences(allCats);
+
         if (userInfo != null) {
             cats = CatPrefDbHelper.getInstance(this).getCatPrefList(userInfo.getUser_email());
+        }
+        else {
+            cats = CatPrefDbHelper.getInstance(this).getCatPrefList("null"); // 未登录
+            Log.d("未登录的偏好情况", "onCreate: " + cats.toString());
         }
 
         // 初始化控件
@@ -189,6 +201,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
             tv_nickname.setText("未登录");
             tv_user_email.setVisibility(View.GONE);
+            cats = CatPrefDbHelper.getInstance(this).getCatPrefList("null");
+            viewPg2.getAdapter().notifyDataSetChanged();
+            new TabLayoutMediator(catTab, viewPg2, new TabLayoutMediator.TabConfigurationStrategy() {
+                @Override
+                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                    tab.setText(cats.get(position));
+                }
+            }).attach();
             tv_nickname.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

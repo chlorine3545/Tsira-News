@@ -110,8 +110,9 @@ public class CatPrefDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         String cat_pref_string = cat_pref.toString();
         values.put("cat_pref", cat_pref_string);
-        String whereClause = "user_email=?";
-        String[] whereArgs = {user_email};
+        boolean isUnlogged = user_email == null;
+        String whereClause = isUnlogged ? null : "user_email=?";
+        String[] whereArgs = isUnlogged ? null : new String[]{user_email};
         int update = db.update("catpref_table", values, whereClause, whereArgs);
         db.close();
         return update;
@@ -124,5 +125,18 @@ public class CatPrefDbHelper extends SQLiteOpenHelper {
             return null;
         }
         return catPref.get(0).getCatPref();
+    }
+
+    // 这方法是临时的，就是给我调试用的，后面会删掉
+    public int resetAllUserPreferences(List<String> defaultCatPrefs) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String defaultCatPrefString = defaultCatPrefs.toString();
+        values.put("cat_pref", defaultCatPrefString);
+
+        // 更新所有用户的偏好列表为默认列表
+        int updateCount = db.update("catpref_table", values, null, null);
+        db.close();
+        return updateCount;
     }
 }
