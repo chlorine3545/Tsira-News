@@ -1,6 +1,7 @@
 package com.java.liyao;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import java.util.List;
 
 public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.ViewHolder> {
@@ -36,6 +36,8 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImagePagerAdapter.Vi
                 .load(imageUrl)
                 .apply(new RequestOptions().placeholder(R.drawable.default_holder).error(R.drawable.error))
                 .into(holder.imageView);
+
+        Log.d("ImageLoader", "Loading image: " + imageUrl + " Total images: " + imageUrls.size());
     }
 
     @Override

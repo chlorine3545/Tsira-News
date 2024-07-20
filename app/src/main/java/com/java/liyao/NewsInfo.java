@@ -1,13 +1,12 @@
 package com.java.liyao;
 
 import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
-
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @lombok.NoArgsConstructor
 @lombok.Data
@@ -126,39 +125,16 @@ public class NewsInfo {
                 return Collections.emptyList();
             }
 
-            // Remove the square brackets at the beginning and end
-            String trimmedImage = image.trim();
-            if (trimmedImage.startsWith("[") && trimmedImage.endsWith("]")) {
-                trimmedImage = trimmedImage.substring(1, trimmedImage.length() - 1);
-            }
+            // 去除字符串两端的大括号和方括号
+            String trimmedImage = image.replaceAll("^[\\[\\{]|\\u003d[\\]\\}]\\s*$", "");
 
-            // Split the string by comma, considering that URLs might contain commas
+            // 使用正则表达式匹配URL，考虑到URL可能包含逗号，我们使用非贪婪匹配
             List<String> imageList = new ArrayList<>();
-            StringBuilder currentUrl = new StringBuilder();
-            boolean inUrl = false;
+            Pattern pattern = Pattern.compile("(https?://[^,\"'\\s]+)");
+            Matcher matcher = pattern.matcher(trimmedImage);
 
-            for (char c : trimmedImage.toCharArray()) {
-                if (c == ',' && !inUrl) {
-                    if (currentUrl.length() > 0) {
-                        imageList.add(currentUrl.toString().trim());
-                        currentUrl = new StringBuilder();
-                    }
-                } else if (c == 'h' && currentUrl.length() == 0) {
-                    inUrl = true;
-                    currentUrl.append(c);
-                } else if (c == ' ' && inUrl) {
-                    inUrl = false;
-                    if (currentUrl.length() > 0) {
-                        imageList.add(currentUrl.toString().trim());
-                        currentUrl = new StringBuilder();
-                    }
-                } else {
-                    currentUrl.append(c);
-                }
-            }
-
-            if (currentUrl.length() > 0) {
-                imageList.add(currentUrl.toString().trim());
+            while (matcher.find()) {
+                imageList.add(matcher.group(1).trim());
             }
 
             return imageList;
@@ -198,7 +174,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class KeywordsDTO implements Serializable{
+        public static class KeywordsDTO implements Serializable {
             @com.fasterxml.jackson.annotation.JsonProperty("score")
             private Double score;
             @com.fasterxml.jackson.annotation.JsonProperty("word")
@@ -207,7 +183,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class WhenDTO implements Serializable{
+        public static class WhenDTO implements Serializable {
             @com.fasterxml.jackson.annotation.JsonProperty("score")
             private Double score;
             @com.fasterxml.jackson.annotation.JsonProperty("word")
@@ -216,7 +192,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class PersonsDTO implements Serializable{
+        public static class PersonsDTO implements Serializable {
             @com.fasterxml.jackson.annotation.JsonProperty("count")
             private Double count;
             @com.fasterxml.jackson.annotation.JsonProperty("linkedURL")
@@ -227,7 +203,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class OrganizationsDTO implements Serializable{
+        public static class OrganizationsDTO implements Serializable {
             @com.fasterxml.jackson.annotation.JsonProperty("count")
             private Double count;
             @com.fasterxml.jackson.annotation.JsonProperty("linkedURL")
@@ -238,7 +214,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class LocationsDTO implements Serializable{
+        public static class LocationsDTO implements Serializable {
             @com.fasterxml.jackson.annotation.JsonProperty("count")
             private Double count;
             @com.fasterxml.jackson.annotation.JsonProperty("linkedURL")
@@ -249,7 +225,7 @@ public class NewsInfo {
 
         @lombok.NoArgsConstructor
         @lombok.Data
-        public static class WhoDTO implements Serializable{
+        public static class WhoDTO implements Serializable {
             @com.fasterxml.jackson.annotation.JsonProperty("score")
             private Double score;
             @com.fasterxml.jackson.annotation.JsonProperty("word")

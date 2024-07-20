@@ -22,10 +22,25 @@
 
         </Toolbar>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/details_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="wrap_content">
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/details_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+            <TextView
+                android:id="@+id/image_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/details_image"
+                android:layout_alignEnd="@id/details_image"
+                android:layout_margin="8dp"
+                android:background="#80000000"
+                android:padding="4dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+        </RelativeLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/ai_summary_card"
