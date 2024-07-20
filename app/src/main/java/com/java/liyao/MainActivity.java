@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             cats = CatPrefDbHelper.getInstance(this).getCatPrefList("null"); // 未登录
-            Log.d("未登录的偏好情况", "onCreate: " + cats.toString());
+            // 先用 "null" 作为未登录的邮箱，可以避免直接使用 null 带来的亿点啸问题
+            // Log.d("未登录的偏好情况", "onCreate: " + cats.toString());
         }
 
         // 初始化控件
@@ -92,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.nav_category) {
                     Intent intent = new Intent(MainActivity.this, EditCategoriesActivity.class);
                     startActivity(intent);
+                } else if (item.getItemId() == R.id.nav_logout) {
+                    userInfo.logOut();
+                    Toast.makeText(MainActivity.this, "已退出登录！", Toast.LENGTH_SHORT).show();
+                    onResume();
                 } else if (item.getItemId() == R.id.nav_account) {
                     Intent intent;
                     if (userInfo == null) {

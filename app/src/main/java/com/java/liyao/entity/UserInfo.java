@@ -65,4 +65,9 @@ public class UserInfo {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void logOut() {
+        sUserInfo = null;
+        return;
+    }
 }

@@ -143,7 +143,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         // details_content.setText(dataDTO.getContent());
         details_time.setText(dataDTO.getPublishTime());
 
-        details_toolbar.setOnClickListener(new View.OnClickListener() {
+        details_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
