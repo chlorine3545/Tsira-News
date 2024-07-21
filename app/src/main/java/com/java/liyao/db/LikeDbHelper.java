@@ -36,7 +36,7 @@ public class LikeDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //创建user_table表
+        //创建表
         db.execSQL("create table like_table(like_id integer primary key autoincrement, " +
                 "user_email text," +       // 按照我的规定，我们使用用户邮箱作为用户的唯一标识
                 "unique_id text," +

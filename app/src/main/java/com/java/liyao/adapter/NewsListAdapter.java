@@ -55,7 +55,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
     @NonNull
     @Override
     public MyHold onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // GitHub Copilot 配享太庙！！！！！！！
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.new_item, parent, false);
         return new MyHold(view);
     }
@@ -77,12 +76,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
         }
         else {
             holder.title.setTextColor(mContext.getResources().getColor(R.color.black));
-            // 权宜之计
         }
 
         // 使用Glide加载图片，确保了图片URL的正确性
         // 这里似乎出现了问题，图片的请求都失败了？
-        // 行，解决了。这个 image 的格式实在是太智障了。
+        // 行，解决了。这个 image 的格式实在是太xx了。
         if (dataDTO.getImage() != null && !dataDTO.getImage().isEmpty()) {
             Glide.with(mContext)
                     .load(dataDTO.getThumbnail())

@@ -69,9 +69,12 @@ public class NewsDetailsActivity extends AppCompatActivity {
         if (dataDTO.getVideo() != null && !dataDTO.getVideo().isEmpty()) {
             videoUrl = dataDTO.getVideo();
         }
+        // videoUrl = "http://vjs.zencdn.net/v/oceans.mp4";
+
+        // 此时的 videoURL 要么是 null，要么是一个非空字符串
 
         Log.d("ImageLoader", "onCreate: " + dataDTO.getTitle() + imageUrls.toString());
-        if ((imageUrls != null && !imageUrls.isEmpty()) || (videoUrl != null && !videoUrl.isEmpty())) {
+        if ((imageUrls != null && !imageUrls.isEmpty()) || (videoUrl != null)) {
             imagePagerAdapter = new ImagePagerAdapter(this, imageUrls, videoUrl);
             details_image.setAdapter(imagePagerAdapter);
             details_image.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
@@ -89,12 +92,8 @@ public class NewsDetailsActivity extends AppCompatActivity {
             });
 
             image_indicator.setVisibility(View.VISIBLE);
-        } else if (videoUrl != null && !videoUrl.isEmpty()) {
-            // 如果有视频，可以隐藏ViewPager2
-            details_image.setVisibility(View.GONE);
-            image_indicator.setVisibility(View.GONE);
         } else {
-            // 如果没有图片，可以隐藏ViewPager2
+            // 如果没有图片、视频，隐藏ViewPager2和指示器
             details_image.setVisibility(View.GONE);
             image_indicator.setVisibility(View.GONE);
         }

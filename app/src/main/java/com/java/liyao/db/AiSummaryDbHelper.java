@@ -31,7 +31,7 @@ public class AiSummaryDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //创建user_table表
+        //创建表
         db.execSQL("create table summary_table(summary_id integer primary key autoincrement, " +
                 "unique_id TEXT," +
                 "ai_summary TEXT" +

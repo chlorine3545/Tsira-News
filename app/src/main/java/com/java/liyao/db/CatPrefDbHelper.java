@@ -32,7 +32,7 @@ public class CatPrefDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //创建user_table表
+        //创建表
         db.execSQL("create table catpref_table(catpref_id integer primary key autoincrement, " +
                 "user_email text," +       // 按照我的规定，我们使用用户邮箱作为用户的唯一标识
                 "cat_pref text" +

@@ -1,6 +1,7 @@
 package com.java.liyao;
 
 import static org.apache.commons.codec.digest.DigestUtils.sha256Hex;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class HistoryDbHelper extends SQLiteOpenHelper {
     private static HistoryDbHelper historyDbHelper;
-    private static final String DB_NAME = "histories.db";
+    private static final String DB_NAME = "history.db";
     private static final int DB_VERSION = 1;
 
     public HistoryDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -33,7 +33,7 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //创建user_table表
+        //创建表
         db.execSQL("create table history_table(history_id integer primary key autoincrement, " +
                 "user_email text," +       // 按照我的规定，我们使用用户邮箱作为用户的唯一标识
                 "unique_id text," +
