@@ -22,18 +22,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.java.liyao.adapter.NewsListAdapter;
-import com.java.liyao.db.HistoryDbHelper;
-import com.java.liyao.db.LikeDbHelper;
-import com.java.liyao.entity.HistoryInfo;
 import com.java.liyao.entity.UserInfo;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,8 +44,6 @@ public class CatTabFragment extends Fragment {
     private RecyclerView newsList;
     private NewsListAdapter newsListAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private HashSet<String> alreadyViewed;
-    private HashSet<String> alreadyLiked;
 
     private boolean isLoading = false;
     private int currentPage = 1;
@@ -134,18 +127,6 @@ public class CatTabFragment extends Fragment {
         // 获取用户信息
         UserInfo userInfo = UserInfo.getUserinfo();
         String eml = userInfo == null ? null : userInfo.getUser_email();
-
-        // 获取已浏览和已喜欢的新闻 ID
-        alreadyViewed = HistoryDbHelper.getInstance(getActivity()).getHistory(eml).stream()
-                .map(HistoryInfo::getUnique_id)
-                .collect(Collectors.toCollection(HashSet::new));
-        alreadyLiked = LikeDbHelper.getInstance(getActivity()).getLike(eml).stream()
-                .map(HistoryInfo::getUnique_id)
-                .collect(Collectors.toCollection(HashSet::new));
-
-        // 设置已浏览和已喜欢的新闻到 adapter
-        newsListAdapter.setAlreadyViewed(alreadyViewed);
-        newsListAdapter.setAlreadyLiked(alreadyLiked);
 
         // 设置 adapter 到 RecyclerView
         newsList.setAdapter(newsListAdapter);

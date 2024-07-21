@@ -74,7 +74,6 @@ public class SearchActivity extends AppCompatActivity {
 
             // 执行搜索逻辑
             Toast.makeText(this, "搜索关键词: " + keyword + ", 开始日期: " + startDate + ", 结束日期: " + endDate + ", 类别: " + category, Toast.LENGTH_LONG).show();
-            // 快要写搜索结果活动了，仿造一下首页列表就可以了。
             // TODO
             Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
             intent.putExtra("KEYWORD", keyword);

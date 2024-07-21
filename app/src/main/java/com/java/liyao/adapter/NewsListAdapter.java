@@ -19,6 +19,9 @@ import com.java.liyao.NewsInfo;
 import com.java.liyao.R;
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
+import com.java.liyao.db.HistoryDbHelper;
+import com.java.liyao.db.LikeDbHelper;
+import com.java.liyao.entity.UserInfo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,16 +31,9 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
 
     private List<NewsInfo.DataDTO> mDataDTOList = new ArrayList<>();
     private Context mContext;
-    HashSet<String> alreadyViewed = new HashSet<>();
-    HashSet<String> alreadyLiked = new HashSet<>();
 
-    public void setAlreadyViewed(HashSet<String> alreadyViewed) {
-        this.alreadyViewed = alreadyViewed;
-    }
-
-    public void setAlreadyLiked(HashSet<String> alreadyLiked) {
-        this.alreadyLiked = alreadyLiked;
-    }
+    UserInfo userInfo = UserInfo.getUserinfo();
+    String eml = userInfo == null ? null : userInfo.getUser_email();
 
     public NewsListAdapter(Context context) {
         this.mContext = context;
@@ -49,11 +45,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
     }
 
     public boolean isViewed(String unique_id) {
-        return alreadyViewed.contains(unique_id);
+        return HistoryDbHelper.getInstance(mContext).searchHistory(unique_id, eml);
     }
 
     public boolean isLiked(String unique_id) {
-        return alreadyLiked.contains(unique_id);
+        return LikeDbHelper.getInstance(mContext).searchLike(unique_id, eml);
     }
 
     @NonNull

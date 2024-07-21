@@ -22,6 +22,7 @@ import com.java.liyao.entity.UserInfo;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class NewsDetailsActivity extends AppCompatActivity {
     private NewsInfo.DataDTO dataDTO;
@@ -165,8 +166,13 @@ public class NewsDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void setAi_summary_DTO(String s) {
         runOnUiThread(() -> {
+            if (Objects.equals(s, "failed to get ai summary")) {
+                ai_summary.setText("摘要：AI摘要生成失败");
+                return;
+            }
             ai_summary.setText("摘要：" + s);
             dataDTO.setAiSummary(s);
             AiSummaryDbHelper.getInstance(NewsDetailsActivity.this).addSummary(dataDTO.getUniqueID(), s);

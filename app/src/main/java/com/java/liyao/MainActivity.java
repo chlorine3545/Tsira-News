@@ -25,6 +25,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.java.liyao.adapter.NewsListAdapter;
 import com.java.liyao.db.CatPrefDbHelper;
 import com.java.liyao.entity.CatPrefInfo;
 import com.java.liyao.entity.UserInfo;
@@ -38,7 +39,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final List<String> allCats = Arrays.asList(new String[]{"全部", "娱乐", "军事", "教育", "文化", "健康", "财经", "体育", "汽车", "科技", "社会"});
-    private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
+    // private static final Logger log = LoggerFactory.getLogger(MainActivity.class);
     UserInfo userInfo = UserInfo.getUserinfo();
     private List<String> cats = allCats;
     // 得先获取用户的分类，如果没有登录，就用默认的分类。

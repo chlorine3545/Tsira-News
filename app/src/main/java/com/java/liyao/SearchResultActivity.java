@@ -59,7 +59,7 @@ public class SearchResultActivity extends AppCompatActivity {
         startDate = intent.getStringExtra("START_DATE");
         endDate = intent.getStringExtra("END_DATE");
 
-        Log.d("IntentArgPassed", "onCreate: " + keyword + " " + cat + " " + startDate + " " + endDate);
+        // Log.d("IntentArgPassed", "onCreate: " + keyword + " " + cat + " " + startDate + " " + endDate);
 
         search_result_toolbar = findViewById(R.id.search_result_toolbar);
         newsList = findViewById(R.id.newsList);
@@ -92,22 +92,15 @@ public class SearchResultActivity extends AppCompatActivity {
         newsListAdapter = new NewsListAdapter(this);
         UserInfo userInfo = UserInfo.getUserinfo();
         String eml = userInfo == null ? null : userInfo.getUser_email();
-        alreadyViewed = HistoryDbHelper.getInstance(this).getHistory(eml).stream().map(HistoryInfo::getUnique_id).collect(Collectors.toCollection(HashSet::new));
-        alreadyLiked = LikeDbHelper.getInstance(this).getLike(eml).stream().map(HistoryInfo::getUnique_id).collect(Collectors.toCollection(HashSet::new));
-        newsListAdapter.setAlreadyViewed(alreadyViewed);
-        newsListAdapter.setAlreadyLiked(alreadyLiked);
         newsList.setAdapter(newsListAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         newsList.setLayoutManager(layoutManager);
 
-        newsListAdapter.setOnItemClickListener(new NewsListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(NewsInfo.DataDTO dataDTO, int position) {
-                Intent intent = new Intent(SearchResultActivity.this, NewsDetailsActivity.class);
-                intent.putExtra("dataDTO", dataDTO);
-                startActivity(intent);
-            }
+        newsListAdapter.setOnItemClickListener((dataDTO, position) -> {
+            Intent intent = new Intent(SearchResultActivity.this, NewsDetailsActivity.class);
+            intent.putExtra("dataDTO", dataDTO);
+            startActivity(intent);
         });
 
         newsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -185,7 +178,7 @@ public class SearchResultActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.d("NetworkError", "onFailure: " + e.toString());
+                Log.d("NetworkError", "onFailure: " + e);
                 isLoading = false;
                 runOnUiThread(() -> Toast.makeText(SearchResultActivity.this, "网络请求失败", Toast.LENGTH_SHORT).show());
             }
@@ -216,10 +209,6 @@ public class SearchResultActivity extends AppCompatActivity {
     private void updateViewedStatus() {
         UserInfo userInfo = UserInfo.getUserinfo();
         String eml = userInfo == null ? null : userInfo.getUser_email();
-        alreadyViewed = HistoryDbHelper.getInstance(this).getHistory(eml).stream().map(HistoryInfo::getUnique_id).collect(Collectors.toCollection(HashSet::new));
-        alreadyLiked = LikeDbHelper.getInstance(this).getLike(eml).stream().map(HistoryInfo::getUnique_id).collect(Collectors.toCollection(HashSet::new));
-        newsListAdapter.setAlreadyViewed(alreadyViewed);
-        newsListAdapter.setAlreadyLiked(alreadyLiked);
         newsListAdapter.notifyDataSetChanged();
     }
 }
