@@ -27,6 +27,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.java.liyao.adapter.NewsListAdapter;
 import com.java.liyao.db.CatPrefDbHelper;
+import com.java.liyao.db.HistoryDbHelper;
 import com.java.liyao.entity.CatPrefInfo;
 import com.java.liyao.entity.UserInfo;
 
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // CatPrefDbHelper.getInstance(this).resetAllUserPreferences(allCats);
+        // HistoryDbHelper.getInstance(this).deleteAllHistory();
 
         if (userInfo != null) {
             cats = CatPrefDbHelper.getInstance(this).getCatPrefList(userInfo.getUser_email());

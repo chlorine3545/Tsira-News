@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class HistoryDbHelper extends SQLiteOpenHelper {
     private static HistoryDbHelper historyDbHelper;
-    private static final String DB_NAME = "history.db";
+    private static final String DB_NAME = "histories.db";
     private static final int DB_VERSION = 1;
 
     public HistoryDbHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
@@ -95,17 +96,16 @@ public class HistoryDbHelper extends SQLiteOpenHelper {
         String sql;
         Cursor cursor;
         if (ue == null) {
-            // If user_email is null, modify the query to not include user_email in the WHERE clause
             sql = "select history_id, user_email, unique_id, news_json from history_table where unique_id=?";
             cursor = db.rawQuery(sql, new String[]{uk});
         } else {
-            // If user_email is not null, include it in the WHERE clause
             sql = "select history_id, user_email, unique_id, news_json from history_table where unique_id=? and user_email=?";
             cursor = db.rawQuery(sql, new String[]{uk, ue});
         }
         boolean result = cursor.getCount() > 0;
         cursor.close();
         db.close();
+        Log.d("SearchHistory", "searchHistory: unique_id=" + uk + ", user_email=" + ue + ", result=" + result);
         return result;
     }
 

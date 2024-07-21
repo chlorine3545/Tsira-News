@@ -73,6 +73,11 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyHold
             // Log.d("Viewed", "onBindViewHolder: 已浏览");
             // 为标题设置特殊颜色
             holder.title.setTextColor(mContext.getResources().getColor(R.color.grey));
+            // Log.d("AlreadyViewed", "onBindViewHolder: " + dataDTO.getTitle() + "已浏览");
+        }
+        else {
+            holder.title.setTextColor(mContext.getResources().getColor(R.color.black));
+            // 权宜之计
         }
 
         // 使用Glide加载图片，确保了图片URL的正确性
