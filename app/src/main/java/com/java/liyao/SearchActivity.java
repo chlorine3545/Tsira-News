@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -91,25 +94,28 @@ public class SearchActivity extends AppCompatActivity {
 
     private void showDatePickerDialog(final boolean isStart) {
         Calendar calendar = Calendar.getInstance();
-        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            Calendar selectedDate = Calendar.getInstance();
-            selectedDate.set(year, month, dayOfMonth);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, year, month, dayOfMonth) -> {
+                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate.set(year, month, dayOfMonth);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            String date = sdf.format(selectedDate.getTime());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    String date = sdf.format(selectedDate.getTime());
 
-            if (isStart) {
-                start_date_button.setText(getString(R.string.start_date) + ": " + date);
-            } else {
-                end_date_button.setText(getString(R.string.end_date) + ": " + date);
-            }
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)) {
-            // @Override
-            public void onDateChanged() {
-                // 可以在这里显示一个确定按钮
-                this.getButton(DatePickerDialog.BUTTON_POSITIVE).setText("确定");
-                this.getButton(DatePickerDialog.BUTTON_NEGATIVE).setText("取消");
-            }
-        }.show();
+                    if (isStart) {
+                        start_date_button.setText(getString(R.string.start_date) + ": " + date);
+                    } else {
+                        end_date_button.setText(getString(R.string.end_date) + ": " + date);
+                    }
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+
+        // 设置按钮文本
+        datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "确定", datePickerDialog);
+        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "取消", datePickerDialog);
+
+        datePickerDialog.show();
     }
 }

@@ -34,6 +34,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
     private TextView card_date;
     private TextView card_source;
     private TextView ai_summary;
+    private boolean isLiked;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -102,7 +103,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         String eml = userInfo == null ? null : userInfo.getUser_email();
         HistoryDbHelper.getInstance(NewsDetailsActivity.this).addHistory(eml, dataDTO.getUniqueID(), s);
 
-        boolean isLiked = LikeDbHelper.getInstance(NewsDetailsActivity.this).searchLike(dataDTO.getUniqueID(), eml);
+        isLiked = LikeDbHelper.getInstance(NewsDetailsActivity.this).searchLike(dataDTO.getUniqueID(), eml);
         if (isLiked) {
             like_btn.setImageResource(R.drawable.liked);
             like_btn.setTooltipText("取消收藏");
@@ -139,16 +140,25 @@ public class NewsDetailsActivity extends AppCompatActivity {
         like_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 执行收藏或取消收藏操作
                 if (isLiked) {
-                    like_btn.setTooltipText("收藏");
-                    like_btn.setImageResource(R.drawable.like);
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).deleteLike(dataDTO.getUniqueID(), eml);
                     Toast.makeText(NewsDetailsActivity.this, "取消收藏成功！", Toast.LENGTH_SHORT).show();
                 } else {
-                    like_btn.setImageResource(R.drawable.liked);
-                    like_btn.setTooltipText("取消收藏");
                     LikeDbHelper.getInstance(NewsDetailsActivity.this).addLike(eml, dataDTO.getUniqueID(), s);
                     Toast.makeText(NewsDetailsActivity.this, "收藏成功！", Toast.LENGTH_SHORT).show();
+                }
+
+                // 重新查询数据库以更新isLiked状态
+                isLiked = LikeDbHelper.getInstance(NewsDetailsActivity.this).searchLike(dataDTO.getUniqueID(), eml);
+
+                // 根据新的isLiked状态更新按钮图标和提示文本
+                if (isLiked) {
+                    like_btn.setImageResource(R.drawable.liked);
+                    like_btn.setTooltipText("取消收藏");
+                } else {
+                    like_btn.setImageResource(R.drawable.like);
+                    like_btn.setTooltipText("收藏");
                 }
             }
         });
