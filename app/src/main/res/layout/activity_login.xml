@@ -51,16 +51,16 @@
             </ImageView>
 
             <EditText
+                android:id="@+id/loginEtrEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
                 android:autofillHints=""
-                android:hint="@string/please_input_email"
                 android:background="@android:color/transparent"
-                android:id="@+id/loginEtrEmail"
+                android:hint="@string/please_input_email"
                 android:inputType="textEmailAddress"
                 android:textColorHint="@color/grey"
-                android:textSize="15sp"
-                android:layout_marginStart="12dp">
+                android:textSize="15sp">
 
             </EditText>
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -82,6 +82,7 @@
             </ImageView>
 
             <EditText
+                android:id="@+id/loginEtrPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
@@ -90,31 +91,38 @@
                 android:gravity="center_vertical"
                 android:hint="@string/please_input_password"
                 android:inputType="textPassword"
-                android:id="@+id/loginEtrPassword"
                 android:textColorHint="@color/grey"
                 android:textSize="15sp">
 
             </EditText>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <TextView
-            android:id="@+id/inviteToRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:paddingTop="6dp"
-            android:text="@string/invite_to_register"
-            android:textSize="12sp">
+            <CheckBox
+                android:id="@+id/rememberMe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remember_me_text">
 
-        </TextView>
+            </CheckBox>
+
+            <TextView
+                android:id="@+id/inviteToRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="6dp"
+                android:layout_margin="15dp"
+                android:text="@string/invite_to_register"
+                android:textSize="12sp">
+            </TextView>
 
         <Button
+            android:id="@+id/loginBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="30dp"
             android:background="@drawable/login_btn_bg"
             android:text="@string/lets_login"
-            android:id="@+id/loginBtn"
             android:textColor="#000000"
             android:textSize="20sp">
 

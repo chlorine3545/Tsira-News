@@ -55,4 +55,5 @@
     <string name="category_hint">分类</string>
     <string name="search_result_title">搜索结果</string>
     <string name="about_title">关于App</string>
+    <string name="remember_me_text">记住密码</string>
 </resources>
