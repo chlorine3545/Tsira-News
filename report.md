@@ -2729,6 +2729,7 @@ public class AboutActivity extends AppCompatActivity {
 
 - 调整详情页样式，将元数据和 AI 摘要制成美观的卡片（我是卡片化布局的爱好者）。
 - 规范了一些命名（当然还有很多不规范的地方）。
+- 基于我的 OPPO 实体机进行了一些优化调整，解决了许多实机运行的 bug。
 
 ## 结语
 

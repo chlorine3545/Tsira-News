@@ -164,11 +164,11 @@
             android:id="@+id/details_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
+            android:lineSpacingExtra="8dp"
             android:textColor="@color/black"
             android:layout_gravity="center_horizontal"
             android:textSize="18sp">
-
         </TextView>
 
 <!--        <WebView-->
