@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -50,6 +51,11 @@ public class CatTabFragment extends Fragment {
 
     private static final String CACHE_PREFIX = "news_cache_";
     private static final long CACHE_EXPIRATION = 5 * 60 * 1000; // 5 minutes
+
+    private String tommorowDate() {
+        LocalDate date = LocalDate.now().plusDays(1);
+        return date.toString();
+    }
 
     private void saveCache(String data) {
         SharedPreferences prefs = requireActivity().getSharedPreferences(CACHE_PREFIX + catT, Context.MODE_PRIVATE);
@@ -209,7 +215,9 @@ public class CatTabFragment extends Fragment {
     }
 
     private void fetcher() throws UnsupportedEncodingException {
-
+        if (!isAdded()) {
+            return;
+        }
         String cachedData = getCache();
         if (cachedData != null && currentPage == 1) {
             processData(cachedData);
@@ -218,9 +226,9 @@ public class CatTabFragment extends Fragment {
 
         OkHttpClient okHttpClient = OkHttpSingleton.getInstance(); // Use the singleton instance
         // 《新闻》（指四年前）
-        String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2020-07-01&endDate=2024-08-30&words=&categories=";
+        String baseUrl = "https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2020-07-01&words=&categories=";
         String encodedCatT = Objects.equals(catT, "全部") ? "" : URLEncoder.encode(catT, StandardCharsets.UTF_8.toString());
-        String url = baseUrl + encodedCatT + "&page=" + currentPage;
+        String url = baseUrl + encodedCatT + "&page=" + currentPage + "&endDate=" + tommorowDate();
         Request request = new Request.Builder()
                 .url(url)
                 .get()

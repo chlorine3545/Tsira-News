@@ -34,7 +34,7 @@ public class AiSummary {
         json_content = json_content.replace("\n", "").replace("\t", "").replace("\r", "");
         RequestBody body = RequestBody.create(mediaType, json_content);
 
-        Log.d("AiSummary", "aiSummaryInvoke: " + json_content);
+        // Log.d("AiSummary", "aiSummaryInvoke: " + json_content);
 
         Request request = new Request.Builder()
                 .url("https://open.bigmodel.cn/api/paas/v4/chat/completions")
@@ -46,6 +46,7 @@ public class AiSummary {
         try {
             Response response = client.newCall(request).execute();
             String s = response.body().string();
+            Log.d("XXXXXXXXXX", "aiSummaryInvoke: " + s);
             AiSummaryRetInfo.ChoicesDTO.MessageDTO messageDTO = new Gson().fromJson(s, AiSummaryRetInfo.class).getChoices().get(0).getMessage();
             s = messageDTO.getContent();
 //            Log.d("AiSummary",  s);
