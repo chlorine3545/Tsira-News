@@ -69,6 +69,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
         if (dataDTO.getVideo() != null && !dataDTO.getVideo().isEmpty()) {
             videoUrl = dataDTO.getVideo();
         }
+        videoUrl = "http://vjs.zencdn.net/v/oceans.mp4";
         // videoUrl = "http://vjs.zencdn.net/v/oceans.mp4";
 
         // 此时的 videoURL 要么是 null，要么是一个非空字符串
