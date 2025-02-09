@@ -10,5 +10,5 @@
 - `CHANGELOG.md` ： 把 Git commit msg 导出的 Changelog
 - `README.md` ：本文件
 
-> 瘟锌锑逝
+> [!WARNING]
 > 请选择性阅读 `report.pdf`，其中大部分的源代码都在项目中可以找到，不然可能花费异常长的时间！
